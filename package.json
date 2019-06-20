@@ -1,0 +1,19 @@
+{
+  "name": "turing-backend",
+  "version": "1.0.0",
+  "description": "Backend for Turing e-commerce system",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hassanoloye/turing-backend.git"
+  },
+  "author": "Hassan Oyeboade <oyeboadehassan@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hassanoloye/turing-backend/issues"
+  },
+  "homepage": "https://github.com/hassanoloye/turing-backend#readme"
+}

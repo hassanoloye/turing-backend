@@ -3,8 +3,14 @@
   "version": "1.0.0",
   "description": "Backend for Turing e-commerce system",
   "main": "src/index.js",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=10.15.1"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "versions-check": "node scripts/check_versions.js",
+    "preinstall": "npm run versions-check"
   },
   "repository": {
     "type": "git",
@@ -15,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/hassanoloye/turing-backend/issues"
   },
-  "homepage": "https://github.com/hassanoloye/turing-backend#readme"
+  "homepage": "https://github.com/hassanoloye/turing-backend#readme",
+  "dependencies": {
+    "semver": "^6.1.1"
+  }
 }

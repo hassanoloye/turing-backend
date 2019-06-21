@@ -8,9 +8,13 @@
     "node": ">=10.15.1"
   },
   "scripts": {
-    "start": "npm run versions-check && tsc && node dist/app.js",
+    "build": "tsc",
+    "prewatch": "npm run versions-check",
+    "dev": "nodemon dist/app.js",
+    "watch": "tsc --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "versions-check": "node scripts/check_versions.js",
+    "gen-config": "node scripts/generate_mysql_procedure_config",
     "preinstall": "npm run versions-check"
   },
   "repository": {
@@ -24,9 +28,15 @@
   },
   "homepage": "https://github.com/hassanoloye/turing-backend#readme",
   "dependencies": {
-    "semver": "^6.1.1"
+    "@types/dotenv": "^6.1.1",
+    "dotenv": "^8.0.0",
+    "mysql2": "^1.6.5",
+    "semver": "^6.1.1",
+    "sequelize": "^5.8.12"
   },
   "devDependencies": {
+    "@types/node": "^12.0.10",
+    "sequelize-typescript": "^0.6.11",
     "tslint": "^5.18.0",
     "typescript": "^3.5.2"
   }

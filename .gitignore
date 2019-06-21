@@ -89,3 +89,6 @@ typings/
 
 # Editors
 .idea/
+
+# build output
+dist/

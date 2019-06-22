@@ -7,8 +7,6 @@ import morgan from "morgan";
 import route from "./route";
 import {IS_DEV_MODE} from "./config"
 
-dotenv.config();
-
 const app: Application = express();
 
 app.use(cors());
@@ -55,3 +53,5 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.info(`App running and listening on port ${port}!`);
 });
+
+export default app;

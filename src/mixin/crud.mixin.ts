@@ -40,7 +40,7 @@ export default class CRUDMixin {
         if (!procedureKwargs) {
             procedureKwargs = {};
         }
-        let procedureArgsCallString = '';
+        let procedureArgsCallString = '()';
         if (!_.isEmpty(procedureKwargs)) {
             const procedureConfig = proceduresConfig[procedureName];
             const procedureParameters = procedureConfig && procedureConfig.parameters;
@@ -60,6 +60,7 @@ export default class CRUDMixin {
             throw new Error('Procedure name not found in config');
         }
         const queryString = CRUDMixin._prepareQueryString(procedureName, procedureKwargs);
+        console.log(queryString)
         return await sequelize.query(`CALL ${queryString}`)
     }
 

@@ -25,7 +25,7 @@ function getJavascriptType(dbType) {
 }
 
 function getInputName(dbName) {
-    return _.camelCase(dbName && dbName.replace(/^in/, ''))
+    return _.snakeCase(dbName && dbName.replace(/^in/, ''))
 }
 
 const getParametersConfig = (parameters) => {

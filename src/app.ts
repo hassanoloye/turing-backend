@@ -1,8 +1,9 @@
-import dotenv from "dotenv"
 import express, {Application, NextFunction, Request, Response} from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import morgan from "morgan";
+import passport from "./setup/passport.setup";
+
 
 import route from "./route";
 import {IS_DEV_MODE} from "./config"
@@ -13,6 +14,7 @@ app.use(cors());
 app.use(bodyParser.json({type: "application/json"}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(morgan("dev"));
+app.use(passport.initialize());
 route(app);
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     let error;

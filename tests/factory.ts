@@ -9,6 +9,7 @@ const insertRecordToProcedureNamesMap = {
     'attribute': 'catalog_add_attribute',
     'attribute_value': 'catalog_add_attribute_value',
     'product_attribute': 'catalog_assign_attribute_value_to_product',
+    'customer': 'customer_add'
 };
 
 export const insertRecord = async (tableName: string, values: any = {}) => {

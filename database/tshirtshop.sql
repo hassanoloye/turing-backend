@@ -1,3 +1,4 @@
+USE turing_dev;
 -- Create tshirtshop tables
 
 -- Create department table
@@ -122,7 +123,7 @@ CREATE TABLE `customer` (
   `customer_id`        INT           NOT NULL AUTO_INCREMENT,
   `name`               VARCHAR(50)   NOT NULL,
   `email`              VARCHAR(100)  NOT NULL,
-  `password`           VARCHAR(50)   NOT NULL,
+  `password`           VARCHAR(60)   NOT NULL,
   `credit_card`        TEXT,
   `address_1`          VARCHAR(100),
   `address_2`          VARCHAR(100),
@@ -216,7 +217,7 @@ INSERT INTO `product` (`product_id`, `name`, `description`, `price`, `discounted
        (15, 'Notre Dame', 'Commemorating the 800th anniversary of the famed cathedral.', 18.50, 16.99, 'notre-dame.gif', 'notre-dame-2.gif', 'notre-dame-thumbnail.gif', 2),
        (16, 'Paris Peace Conference', 'The resulting treaties allowed Italy, Romania, Hungary, Bulgaria, and Finland to reassume their responsibilities as sovereign states in international affairs and thus qualify for membership in the UN.', 16.95, 15.99, 'paris-peace-conference.gif', 'paris-peace-conference-2.gif', 'paris-peace-conference-thumbnail.gif', 2),
        (17, 'Sarah Bernhardt', 'The "Divine Sarah" said this about Americans: "You are younger than we as a race, you are perhaps barbaric, but what of it? You are still in the molding. Your spirit is superb. It is what helped us win the war." Perhaps we''re still barbaric but we''re still winning wars for them too!', 14.99, 0.00, 'sarah-bernhardt.gif', 'sarah-bernhardt-2.gif', 'sarah-bernhardt-thumbnail.gif', 0),
-       (18, 'Hunt', 'A scene from "Les Tres Riches Heures," a medieval "book of hours" containing the text for each liturgical hour of the day. This scene is from a 14th century painting.', 16.99, 15.95, 'hunt.gif', 'hunt-2.gif', 'hunt-thumbnail.gif', 2), 
+       (18, 'Hunt', 'A scene from "Les Tres Riches Heures," a medieval "book of hours" containing the text for each liturgical hour of the day. This scene is from a 14th century painting.', 16.99, 15.95, 'hunt.gif', 'hunt-2.gif', 'hunt-thumbnail.gif', 2),
        (19, 'Italia', 'The War had just ended when this stamp was designed, and even so, there was enough optimism to show the destroyed oak tree sprouting again from its stump! What a beautiful T-shirt!', 22.00, 18.99, 'italia.gif', 'italia-2.gif', 'italia-thumbnail.gif', 2),
        (20, 'Torch', 'The light goes on! Carry the torch with this T-shirt and be a beacon of hope for the world!', 19.99, 17.95, 'torch.gif', 'torch-2.gif', 'torch-thumbnail.gif', 2),
        (21, 'Espresso', 'The winged foot of Mercury speeds the Special Delivery mail to its destination. In a hurry? This T-shirt is for you!', 16.95, 0.00, 'espresso.gif', 'espresso-2.gif', 'espresso-thumbnail.gif', 0),
@@ -284,7 +285,7 @@ INSERT INTO `product` (`product_id`, `name`, `description`, `price`, `discounted
        (83, 'Weather Vane', 'This weather vane dates from the 1830''s and is still showing which way the wind blows! Trumpet your arrival with this unique Christmas T-shirt.', 15.95, 14.99, 'weather-vane.gif', 'weather-vane-2.gif', 'weather-vane-thumbnail.gif', 2),
        (84, 'Mistletoe', 'This well-known parasite and killer of trees was revered by the Druids, who would go out and gather it with great ceremony. Youths would go about with it to announce the new year. Eventually more engaging customs were attached to the strange plant, and we''re here to see that they continue with these cool Christmas T-shirts.', 19.00, 17.99, 'mistletoe.gif', 'mistletoe-2.gif', 'mistletoe-thumbnail.gif', 3),
        (85, 'Altar Piece', 'This beautiful angel Christmas T-shirt is awaiting the opportunity to adorn your chest!', 20.50, 18.50, 'altar-piece.gif', 'altar-piece-2.gif', 'altar-piece-thumbnail.gif', 2),
-       (86, 'The Three Wise Men', 'This is a classic rendition of one of the season’s most beloved stories, and now showing on a Christmas T-shirt for you!', 12.99, 0.00, 'the-three-wise-men.gif', 'the-three-wise-men-2.gif', 'the-three-wise-men-thumbnail.gif', 0),
+       (86, 'The Three Wise Men', 'This is a classic rendition of one of the seasonï¿½s most beloved stories, and now showing on a Christmas T-shirt for you!', 12.99, 0.00, 'the-three-wise-men.gif', 'the-three-wise-men-2.gif', 'the-three-wise-men-thumbnail.gif', 0),
        (87, 'Christmas Tree', 'Can you get more warm and folksy than this classic Christmas T-shirt?', 20.00, 17.95, 'christmas-tree.gif', 'christmas-tree-2.gif', 'christmas-tree-thumbnail.gif', 2),
        (88, 'Madonna & Child', 'This exquisite image was painted by Filipino Lippi, a 15th century Italian artist. I think he would approve of it on a Going Postal Christmas T-shirt!', 21.95, 18.50, 'madonna-child.gif', 'madonna-child-2.gif', 'madonna-child-thumbnail.gif', 0),
        (89, 'The Virgin Mary', 'This stained glass window is found in Glasgow Cathedral, Scotland, and was created by Gabriel Loire of France, one of the most prolific of artists in this medium--and now you can have it on this wonderful Christmas T-shirt.', 16.95, 15.95, 'the-virgin-mary.gif', 'the-virgin-mary-2.gif', 'the-virgin-mary-thumbnail.gif', 2),
@@ -419,11 +420,11 @@ BEGIN
     LIMIT      ?, ?";
 
   -- Define query parameters
-  SET @p1 = inShortProductDescriptionLength; 
-  SET @p2 = inShortProductDescriptionLength; 
+  SET @p1 = inShortProductDescriptionLength;
+  SET @p2 = inShortProductDescriptionLength;
   SET @p3 = inCategoryId;
-  SET @p4 = inStartItem; 
-  SET @p5 = inProductsPerPage; 
+  SET @p4 = inStartItem;
+  SET @p5 = inProductsPerPage;
 
   -- Execute the statement
   EXECUTE statement USING @p1, @p2, @p3, @p4, @p5;
@@ -453,7 +454,7 @@ BEGIN
                         p.description,
                         CONCAT(LEFT(p.description, ?),
                                '...')) AS description,
-                     p.price, p.discounted_price, p.thumbnail
+                     p.price, p.discounted_price, p.thumbnail, p.display
      FROM            product p
      INNER JOIN      product_category pc
                        ON p.product_id = pc.product_id
@@ -661,7 +662,7 @@ BEGIN
   FROM   category
   WHERE  department_id = inDepartmentId
   INTO   categoryRowsCount;
-  
+
   IF categoryRowsCount = 0 THEN
     DELETE FROM department WHERE department_id = inDepartmentId;
 
@@ -1121,6 +1122,7 @@ BEGIN
 END$$
 
 -- Create orders_get_order_details stored procedure
+-- TODO: Update to return customer_id too so we can validate if customer owns the order
 CREATE PROCEDURE orders_get_order_details(IN inOrderId INT)
 BEGIN
   SELECT order_id, product_id, attributes, product_name,
@@ -1196,8 +1198,8 @@ BEGIN
 END$$
 
 -- Create customer_add stored procedure
-CREATE PROCEDURE customer_add(IN inName VARCHAR(50),
-  IN inEmail VARCHAR(100), IN inPassword VARCHAR(50))
+CREATE PROCEDURE customer_add(IN inName VARCHAR(60),
+  IN inEmail VARCHAR(100), IN inPassword VARCHAR(60))
 BEGIN
   INSERT INTO customer (name, email, password)
          VALUES (inName, inEmail, inPassword);
@@ -1218,7 +1220,7 @@ END$$
 -- Create customer_update_account stored procedure
 CREATE PROCEDURE customer_update_account(IN inCustomerId INT,
   IN inName VARCHAR(50), IN inEmail VARCHAR(100),
-  IN inPassword VARCHAR(50), IN inDayPhone VARCHAR(100),
+  IN inPassword VARCHAR(60), IN inDayPhone VARCHAR(100),
   IN inEvePhone VARCHAR(100), IN inMobPhone VARCHAR(100))
 BEGIN
   UPDATE customer
@@ -1315,7 +1317,7 @@ END$$
 CREATE PROCEDURE orders_get_order_short_details(IN inOrderId INT)
 BEGIN
   SELECT      o.order_id, o.total_amount, o.created_on,
-              o.shipped_on, o.status, c.name
+              o.shipped_on, o.status, c.name, c.customer_id
   FROM        orders o
   INNER JOIN  customer c
                 ON o.customer_id = c.customer_id
@@ -1352,7 +1354,7 @@ BEGIN
 
   -- Save the order's total amount
   UPDATE orders
-  SET    total_amount = (SELECT SUM(unit_cost * quantity) 
+  SET    total_amount = (SELECT SUM(unit_cost * quantity)
                          FROM   order_detail
                          WHERE  order_id = orderId)
   WHERE  order_id = orderId;
@@ -1463,8 +1465,15 @@ END$$
 CREATE PROCEDURE catalog_create_product_review(IN inCustomerId INT,
   IN inProductId INT, IN inReview TEXT, IN inRating SMALLINT)
 BEGIN
+  DECLARE reviewId INT;
+
   INSERT INTO review (customer_id, product_id, review, rating, created_on)
          VALUES (inCustomerId, inProductId, inReview, inRating, NOW());
+
+  SELECT LAST_INSERT_ID() INTO reviewId;
+  SELECT review_id, customer_id, review, rating, created_on
+  FROM   review
+  WHERE  review_id = reviewId;
 END$$
 
 -- Change back DELIMITER to ;

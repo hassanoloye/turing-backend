@@ -3,6 +3,7 @@ import sequelize from './../setup/sequelize.setup'
 import _ from 'lodash';
 import {baseDir} from '../config'
 import * as path from "path";
+import {ICustomQueryOption, queryActionTypes} from "../shared/interface/custom-query-option";
 
 const proceduresConfigPath = path.join(baseDir, 'src/config/procedures.json');
 const fs = require('fs');
@@ -15,13 +16,17 @@ export default class CRUDMixin {
         this.procedureNames = args.procedureNames;
     }
 
+    private static _getFirstRecord(data: any[]) {
+        return data ? data[0] : null;
+    }
+
     public async getAll(lookupKwargs: any = {}) {
         return await this.queryProcedure(this.procedureNames.getAll, lookupKwargs)
     }
 
-
     public async get(lookupKwargs: any = {}) {
-        return await this.queryProcedure(this.procedureNames.get, lookupKwargs)
+        return await this.queryProcedure(this.procedureNames.get, lookupKwargs,
+            { action: queryActionTypes.FETCH, firstOnly: true});
     }
 
     public async update(lookupKwargs: any = {}, values: any) {
@@ -52,7 +57,7 @@ export default class CRUDMixin {
         return `${procedureName}${procedureArgsCallString}`;
     }
 
-    public async queryProcedure(procedureName: string = '', procedureKwargs: any[] = []) {
+    public async queryProcedure(procedureName: string = '', procedureKwargs: any = {}, option: ICustomQueryOption = {}) {
         if (!procedureName) {
             throw new Error('Procedure name required')
         }
@@ -60,8 +65,9 @@ export default class CRUDMixin {
             throw new Error('Procedure name not found in config');
         }
         const queryString = CRUDMixin._prepareQueryString(procedureName, procedureKwargs);
-        console.log(queryString)
-        return await sequelize.query(`CALL ${queryString}`)
+        const data = await sequelize.query(`CALL ${queryString}`);
+        return (option.firstOnly && option.action === queryActionTypes.FETCH
+            || option.action === queryActionTypes.CREATE ) ? CRUDMixin._getFirstRecord(data) : data;
     }
 
 }

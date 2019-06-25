@@ -8,3 +8,5 @@ export const proceduresConfigPath = path.join(baseDir, 'src/config/procedures.js
 export const tablesConfigPath = path.join(baseDir, 'src/config/tables.json');
 export const proceduresConfig = JSON.parse(fs.readFileSync(proceduresConfigPath, 'utf8'));
 export const tablesConfig = JSON.parse(fs.readFileSync(tablesConfigPath, 'utf8'));
+export const jwtExpires = process.env.JWT_EXPIRESS || '24h';
+export const jwtSecret = process.env.JWT_SECRET || 'secret';

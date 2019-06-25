@@ -122,7 +122,7 @@ CREATE TABLE `customer` (
   `customer_id`        INT           NOT NULL AUTO_INCREMENT,
   `name`               VARCHAR(50)   NOT NULL,
   `email`              VARCHAR(100)  NOT NULL,
-  `password`           VARCHAR(50)   NOT NULL,
+  `password`           VARCHAR(60)   NOT NULL,
   `credit_card`        TEXT,
   `address_1`          VARCHAR(100),
   `address_2`          VARCHAR(100),
@@ -237,7 +237,7 @@ BEGIN
                   p.description,
                   CONCAT(LEFT(p.description, ?),
                          '...')) AS description,
-               p.price, p.discounted_price, p.thumbnail
+               p.price, p.discounted_price, p.thumbnail, p.display
     FROM       product p
     INNER JOIN product_category pc
                  ON p.product_id = pc.product_id
@@ -1024,7 +1024,7 @@ END$$
 
 -- Create customer_add stored procedure
 CREATE PROCEDURE customer_add(IN inName VARCHAR(50),
-  IN inEmail VARCHAR(100), IN inPassword VARCHAR(50))
+  IN inEmail VARCHAR(100), IN inPassword VARCHAR(60))
 BEGIN
   INSERT INTO customer (name, email, password)
          VALUES (inName, inEmail, inPassword);
@@ -1045,7 +1045,7 @@ END$$
 -- Create customer_update_account stored procedure
 CREATE PROCEDURE customer_update_account(IN inCustomerId INT,
   IN inName VARCHAR(50), IN inEmail VARCHAR(100),
-  IN inPassword VARCHAR(50), IN inDayPhone VARCHAR(100),
+  IN inPassword VARCHAR(60), IN inDayPhone VARCHAR(100),
   IN inEvePhone VARCHAR(100), IN inMobPhone VARCHAR(100))
 BEGIN
   UPDATE customer
@@ -1142,7 +1142,7 @@ END$$
 CREATE PROCEDURE orders_get_order_short_details(IN inOrderId INT)
 BEGIN
   SELECT      o.order_id, o.total_amount, o.created_on,
-              o.shipped_on, o.status, c.name
+              o.shipped_on, o.status, c.name, c.customer_id
   FROM        orders o
   INNER JOIN  customer c
                 ON o.customer_id = c.customer_id
@@ -1290,9 +1290,17 @@ END$$
 CREATE PROCEDURE catalog_create_product_review(IN inCustomerId INT,
   IN inProductId INT, IN inReview TEXT, IN inRating SMALLINT)
 BEGIN
+  DECLARE reviewId INT;
+
   INSERT INTO review (customer_id, product_id, review, rating, created_on)
          VALUES (inCustomerId, inProductId, inReview, inRating, NOW());
+
+  SELECT LAST_INSERT_ID() INTO reviewId;
+  SELECT review_id, customer_id, review, rating, created_on
+  FROM   review
+  WHERE  review_id = reviewId;
 END$$
 
 -- Change back DELIMITER to ;
 DELIMITER ;
+

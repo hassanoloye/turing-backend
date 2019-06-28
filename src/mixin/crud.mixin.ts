@@ -50,7 +50,7 @@ export default class CRUDMixin {
             const procedureConfig = proceduresConfig[procedureName];
             const procedureParameters = procedureConfig && procedureConfig.parameters;
             const procedureArgs = procedureParameters && procedureParameters.length ?
-                procedureParameters.map((parameter: string) => `"${procedureKwargs[parameter]}"`) : procedureKwargs.values();
+                procedureParameters.map((parameter: string) => `"${procedureKwargs[parameter]}"`) : Object.values(procedureKwargs);
             procedureArgsCallString = `(${procedureArgs.join(",")})`;
         }
 

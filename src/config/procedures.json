@@ -713,6 +713,24 @@
             "short_product_description_length"
         ]
     },
+    "catalog_get_tax_details": {
+        "fields": {
+            "tax_id": {
+                "dbType": "int",
+                "type": "number",
+                "name": "tax_id",
+                "dbName": "inTaxId",
+                "maxLength": null
+            }
+        },
+        "parameters": [
+            "tax_id"
+        ]
+    },
+    "catalog_get_tax_list": {
+        "fields": {},
+        "parameters": []
+    },
     "catalog_move_product_to_category": {
         "fields": {
             "product_id": {
@@ -1092,7 +1110,7 @@
                 "type": "string",
                 "name": "password",
                 "dbName": "inPassword",
-                "maxLength": 50
+                "maxLength": 60
             }
         },
         "parameters": [
@@ -1165,7 +1183,7 @@
                 "type": "string",
                 "name": "password",
                 "dbName": "inPassword",
-                "maxLength": 50
+                "maxLength": 60
             },
             "day_phone": {
                 "dbType": "varchar",

@@ -999,9 +999,9 @@ BEGIN
 
   -- Create new shopping cart record, or increase quantity of existing record
   IF productQuantity IS NULL THEN
-    INSERT INTO shopping_cart(item_id, cart_id, product_id, attributes,
+    INSERT INTO shopping_cart(cart_id, product_id, attributes,
                               quantity, added_on)
-           VALUES (UUID(), inCartId, inProductId, inAttributes, 1, NOW());
+           VALUES (inCartId, inProductId, inAttributes, 1, NOW());
   ELSE
     UPDATE shopping_cart
     SET    quantity = quantity + 1, buy_now = true
@@ -1474,6 +1474,20 @@ BEGIN
   SELECT review_id, customer_id, review, rating, created_on
   FROM   review
   WHERE  review_id = reviewId;
+END$$
+
+-- Create catalog_get_tax_list stored procedure
+CREATE PROCEDURE catalog_get_tax_list()
+BEGIN
+  SELECT tax_id, tax_type, tax_percentage FROM tax ORDER BY tax_id;
+END$$
+
+-- Create catalog_get_tax_details stored procedure
+CREATE PROCEDURE catalog_get_tax_details(IN inTaxId INT)
+BEGIN
+  SELECT tax_id, tax_type, tax_percentage
+  FROM   tax
+  WHERE  tax_id = inTaxId;
 END$$
 
 -- Change back DELIMITER to ;

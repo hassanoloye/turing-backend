@@ -19,6 +19,9 @@ route(app);
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     let error;
     console.log(err);
+    console.log(
+
+    )
     if (err.name === "SequelizeUniqueConstraintError") {
         error = err.errors[0].message.replace("must be unique", "already exist");
         res.statusMessage = error;

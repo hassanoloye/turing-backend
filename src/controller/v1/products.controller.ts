@@ -1,17 +1,24 @@
 import BaseController from "./base.controller";
 import {IRouteConfig} from "../../shared/interface/route-config";
 import {IProcedureNames} from "../../shared/interface/procedureNames";
-import {Request, Response, NextFunction} from "express";
+import {NextFunction, Request, Response} from "express";
 import authMiddleware from "../../middlewares/auth.middleware";
 import {
-    numberAndNotRequired, numberAndRequired,
-    phoneNumberRequired,
+    numberAndNotRequired,
+    numberAndRequired,
     stringAndNotRequired,
     stringAndRequired,
     validate
 } from "../../services/validator";
-import {get} from 'lodash';
 import {queryActionTypes} from "../../shared/interface/custom-query-option";
+import {
+    categoryIdNumberExpected,
+    categoryWithIdExist,
+    departmentIdNumberExpected,
+    departmentWithIdExist,
+    productIdNumberExpected,
+    productWithIdExist
+} from "../../middlewares/paramsValidator.middleware";
 
 const procedureNames: IProcedureNames = {
     get: 'catalog_get_product_details'
@@ -39,51 +46,65 @@ export default class ProductsController extends BaseController {
         method: 'get',
         fnName: 'get',
         relPath: '/:product_id/',
-        middlewares: [],
+        middlewares: [
+            productIdNumberExpected
+        ],
     }, {
         method: 'get',
         fnName: 'getProductsInCategory',
         relPath: '/inCategory/:category_id',
-        middlewares: [],
+        middlewares: [
+            categoryIdNumberExpected,
+            categoryWithIdExist,
+        ],
     }, {
         method: 'get',
         fnName: 'getProductsOnDepartment',
         relPath: '/inDepartment/:department_id',
-        middlewares: [],
+        middlewares: [
+            departmentIdNumberExpected,
+            departmentWithIdExist,
+        ],
     }, {
         method: 'get',
         fnName: 'getProductDetails',
         relPath: '/:product_id/details',
-        middlewares: [],
+        middlewares: [
+            productIdNumberExpected,
+            productWithIdExist
+        ],
     }, {
         method: 'get',
         fnName: 'getProductLocations',
         relPath: '/:product_id/locations',
-        middlewares: [],
+        middlewares: [
+            productIdNumberExpected
+        ],
     }, {
         method: 'get',
         fnName: 'getProductReviews',
         relPath: '/:product_id/reviews',
-        middlewares: [],
+        middlewares: [
+            productIdNumberExpected
+        ],
     }, {
         method: 'post',
         fnName: 'createProductReview',
         relPath: '/:product_id/reviews',
-        middlewares: [authMiddleware],
+        middlewares: [
+            authMiddleware,
+            productIdNumberExpected,
+        ],
     }];
-
-    constructor() {
-        super({
-            procedureNames: procedureNames,
-        });
-    }
+    public modelName = 'product';
+    public modelLookUpField = 'product_id';
 
     private _searchProductsSchema = {
         properties: {
             query_string: stringAndRequired,
             all_words: stringAndNotRequired,
-            page: stringAndNotRequired,
-            limit: stringAndNotRequired,
+            page: numberAndNotRequired,
+            limit: numberAndNotRequired,
             description_length: stringAndNotRequired,
         }
     };
@@ -107,19 +128,34 @@ export default class ProductsController extends BaseController {
             }
         }
     };
+    private _getProductsParamsSchema = {
+        properties: {
+            page: numberAndNotRequired,
+            limit: numberAndNotRequired,
+            description_length: numberAndNotRequired,
+        }
+    };
+    private _defaultPaginationReplaceFields = {
+        limit: 'products_per_page',
+        description_length: 'short_product_description_length'
+    };
+
+    constructor() {
+        super({
+            procedureNames: procedureNames,
+        });
+    }
+
 
     public async getAll(req: Request, res: Response, next: NextFunction) {
         try {
-            const kwargs = {
-                products_per_page: get(req.query, 'limit', defaultRequestParams.limit),
-                start_item: get(req.query, 'page', defaultRequestParams.page),
-                short_product_description_length: get(
-                    req.query, 'description_length', defaultRequestParams.description_length)
-            };
-            const rows = await this.performCustomQuery('catalog_get_products_on_catalog', kwargs);
+            validate(req.query, this._getProductsParamsSchema, {unknownProperties: 'error'});
+            const {kwargs, queryKwargs} = this.getQueryKwargsFromRequest(req, defaultRequestParams,
+                {replaceFields: this._defaultPaginationReplaceFields});
+            const rows = await this.performCustomQuery('catalog_get_products_on_catalog', queryKwargs);
             const total = await this.performCustomQueryCount(
                 'catalog_count_products_on_catalog', req.params);
-            return res.json({count: rows.length, rows, total})
+            return res.json(this.getPaginatedResult(rows, total, kwargs, this._defaultPaginationReplaceFields))
         } catch (e) {
             next(e)
         }
@@ -127,20 +163,24 @@ export default class ProductsController extends BaseController {
 
     public async search(req: Request, res: Response, next: NextFunction) {
         try {
-            // TODO: investigate why this is not working
             validate(req.query, this._searchProductsSchema, {unknownProperties: 'error'});
-            const searchKwargs = {
-                search_string: req.query.query_string,
-                all_words: get(req.query, 'all_words', defaultRequestParams.all_words),
-                start_item: get(req.query, 'page', defaultRequestParams.page),
-                products_per_page: get(req.query, 'limit', defaultRequestParams.limit),
-                short_product_description_length: get(
-                    req.query, 'description_length', defaultRequestParams.description_length)
+            const replaceFields = {
+                ...this._defaultPaginationReplaceFields,
+                query_string: 'search_string'
             };
-            const data = await this.performCustomQuery('catalog_search', searchKwargs);
+            const {kwargs, queryKwargs} = this.getQueryKwargsFromRequest(
+                req,
+                defaultRequestParams,
+                {
+                    fields: ['query_string', 'all_words', 'limit', 'description_length', 'page'],
+                    replaceFields
+                }
+            );
+
+            const rows = await this.performCustomQuery('catalog_search', queryKwargs);
             const total = await this.performCustomQueryCount(
                 'catalog_count_products_on_catalog', req.params);
-            return res.json({data, count: data.length, total})
+            return res.json(this.getPaginatedResult(rows, total, kwargs, replaceFields))
         } catch (e) {
             next(e);
         }
@@ -149,18 +189,14 @@ export default class ProductsController extends BaseController {
     public async getProductsInCategory(req: Request, res: Response, next: NextFunction) {
         try {
             validate(req.query, this._productsInCategoryReqQuerySchema, {unknownProperties: 'error'});
-            const kwargs = {
-                ...req.params,
-                products_per_page: get(req.query, 'limit', defaultRequestParams.limit),
-                start_item: get(req.query, 'page', defaultRequestParams.page),
-                short_product_description_length: get(
-                    req.query, 'description_length', defaultRequestParams.description_length)
-            };
-            const data = await this.performCustomQuery('catalog_get_products_in_category', kwargs);
+            const {kwargs, queryKwargs} = this.getQueryKwargsFromRequest(req, defaultRequestParams,
+                {replaceFields: this._defaultPaginationReplaceFields});
+            const rows = await this.performCustomQuery('catalog_get_products_in_category',
+                {...queryKwargs, ...req.params});
             const total = await this.performCustomQueryCount(
                 'catalog_count_products_in_category', req.params);
-            return res.json({data, count: data.length, total})
-        }  catch (e) {
+            return res.json(this.getPaginatedResult(rows, total, kwargs, this._defaultPaginationReplaceFields));
+        } catch (e) {
             next(e);
         }
     }
@@ -168,23 +204,19 @@ export default class ProductsController extends BaseController {
     public async getProductsOnDepartment(req: Request, res: Response, next: NextFunction) {
         try {
             validate(req.query, this._productsOnDepartmentReqQuerySchema, {unknownProperties: 'error'});
-            const kwargs = {
-                ...req.params,
-                products_per_page: get(req.query, 'limit', defaultRequestParams.limit),
-                start_item: get(req.query, 'page', defaultRequestParams.page),
-                short_product_description_length: get(
-                    req.query, 'description_length', defaultRequestParams.description_length)
-            };
-            const data = await this.performCustomQuery('catalog_get_products_on_department', kwargs);
+            const {kwargs, queryKwargs} = this.getQueryKwargsFromRequest(req, defaultRequestParams,
+                {replaceFields: this._defaultPaginationReplaceFields});
+            const rows = await this.performCustomQuery('catalog_get_products_on_department',
+                {...queryKwargs, ...req.params});
             const total = await this.performCustomQueryCount(
                 'catalog_count_products_on_department', req.params);
-            return res.json({data, count: data.length, total})
+            return res.json(this.getPaginatedResult(rows, total, kwargs, this._defaultPaginationReplaceFields));
         } catch (e) {
             next(e);
         }
     }
 
-    public async getProductDetails (req: Request, res: Response, next: NextFunction) {
+    public async getProductDetails(req: Request, res: Response, next: NextFunction) {
         try {
             const record = await this.performCustomQuery(
                 'catalog_get_product_details', req.params, this.fetchQueryDefaultOptions);
@@ -194,7 +226,7 @@ export default class ProductsController extends BaseController {
         }
     }
 
-    public async getProductLocations (req: Request, res: Response, next: NextFunction) {
+    public async getProductLocations(req: Request, res: Response, next: NextFunction) {
         try {
             const record = await this.performCustomQuery(
                 'catalog_get_product_locations', req.params);
@@ -204,7 +236,7 @@ export default class ProductsController extends BaseController {
         }
     }
 
-    public async getProductReviews (req: Request, res: Response, next: NextFunction) {
+    public async getProductReviews(req: Request, res: Response, next: NextFunction) {
         try {
             const record = await this.performCustomQuery(
                 'catalog_get_product_reviews', req.params);
@@ -214,7 +246,7 @@ export default class ProductsController extends BaseController {
         }
     }
 
-    public async createProductReview (req: Request, res: Response, next: NextFunction) {
+    public async createProductReview(req: Request, res: Response, next: NextFunction) {
         try {
             validate(req.body, this._createProductReviewSchema, {unknownProperties: 'error'});
             const createKwargs = {...req.body, ...req.params};

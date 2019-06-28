@@ -2,9 +2,9 @@ import BaseController from "./base.controller";
 import {IRouteConfig} from "../../shared/interface/route-config";
 import {NextFunction, Request, Response} from "express";
 import authMiddleware from "../../middlewares/auth.middleware";
-import {modelNames} from "../../shared/constants";
 import {numberAndRequired, stringAndRequired, validate} from "../../services/validator";
 import {queryActionTypes} from "../../shared/interface/custom-query-option";
+import {orderIdNumberExpected} from "../../middlewares/paramsValidator.middleware";
 
 
 export default class OrdersController extends BaseController {
@@ -12,24 +12,36 @@ export default class OrdersController extends BaseController {
         method: 'post',
         fnName: 'create',
         relPath: '/',
-        middlewares: [authMiddleware],
-    }, {
-        method: 'get',
-        fnName: 'get',
-        relPath: '/:order_id',
-        middlewares: [authMiddleware],
+        middlewares: [
+            authMiddleware,
+        ],
     }, {
         method: 'get',
         fnName: 'getCustomerOrders',
         relPath: '/inCustomer',
-        middlewares: [authMiddleware],
+        middlewares: [
+            authMiddleware,
+        ],
+    }, {
+        method: 'get',
+        fnName: 'get',
+        relPath: '/:order_id',
+        middlewares: [
+            authMiddleware,
+            orderIdNumberExpected,
+        ],
     }, {
         method: 'get',
         fnName: 'getOrderShortDetail',
         relPath: '/inOrder/shortDetail/:order_id',
-        middlewares: [authMiddleware],
+        middlewares: [
+            authMiddleware,
+            orderIdNumberExpected,
+        ],
     }];
-    public _createOrderSchema = {
+    public modelName = 'order';
+    public modelLookUpField = 'order_id';
+    private _createOrderSchema = {
         properties: {
             cart_id: stringAndRequired,
             shipping_id: numberAndRequired,
@@ -56,7 +68,7 @@ export default class OrdersController extends BaseController {
     async get(req: Request, res: Response, next: NextFunction) {
         try {
             const order = await this.performCustomQuery(
-                'orders_get_order_details', req.params);
+                'orders_get_order_details', req.params, this.fetchQueryDefaultOptions);
             return res.json(order)
         } catch (e) {
             next(e)
@@ -66,7 +78,7 @@ export default class OrdersController extends BaseController {
     async getCustomerOrders(req: Request, res: Response, next: NextFunction) {
         try {
             const customerOrders = await this.performCustomQuery(
-                'orders_get_by_customer_id', req.params);
+                'orders_get_by_customer_id', {customer_id: req.user.id});
             return res.json(customerOrders)
         } catch (e) {
             next(e)
@@ -76,7 +88,7 @@ export default class OrdersController extends BaseController {
     async getOrderShortDetail(req: Request, res: Response, next: NextFunction) {
         try {
             const orderShortDetail = await this.performCustomQuery(
-                'orders_get_order_short_details', req.params, {modelName: modelNames.ORDER});
+                'orders_get_order_short_details', req.params, this.fetchQueryDefaultOptions);
             return res.json(orderShortDetail)
         } catch (e) {
             next(e)

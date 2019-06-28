@@ -10,7 +10,8 @@ export const createToken = (customer: any) => {
         email: customer.email,
         phone: customer.phone,
     };
-    return sign(data, jwtSecret, {expiresIn: jwtExpires});
+    const token = sign(data, jwtSecret, {expiresIn: jwtExpires});
+    return `Bearer ${token}`
 };
 
 export const hashPassword = (password: string) => {
@@ -22,6 +23,6 @@ export const comparePassword = (savedPassword: string, inputPassword: string) =>
     return bcrypt.compareSync(inputPassword, savedPassword);
 };
 
-export const getTokenFromAuthorization = (authorizationString: string): string | null => {
-  return authorizationString ? authorizationString.split(" ")[1] : null;
+export const getTokenFromAuthorization = (authorizationString: any): string => {
+    return authorizationString ? authorizationString.split(" ")[1] : '';
 };

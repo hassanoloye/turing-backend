@@ -2,11 +2,11 @@ import express, {Application, NextFunction, Request, Response} from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import morgan from "morgan";
+
 import passport from "./setup/passport.setup";
-
-
 import route from "./route";
 import {IS_DEV_MODE} from "./config"
+import {errorTypes} from "./shared/constants";
 
 const app: Application = express();
 
@@ -18,10 +18,9 @@ app.use(passport.initialize());
 route(app);
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     let error;
-    console.log(err);
-    console.log(
-
-    )
+    if (err.type === errorTypes.CUSTOM_API) {
+        return res.status(err.status).send({error: err.error});
+    }
     if (err.name === "SequelizeUniqueConstraintError") {
         error = err.errors[0].message.replace("must be unique", "already exist");
         res.statusMessage = error;
@@ -46,12 +45,8 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
         return res.status(500).send({message: error});
     }
 
-    if (IS_DEV_MODE) {
-        res.statusMessage = err.message;
-        return res.status(err.status).send({message: err.message, errors: err});
-    } else {
-        return res.status(500).send({message: "An error occurred on our end. Please try again later"});
-    }
+    res.statusMessage = err.message;
+    return res.status(err.status).send({message: err.message, error: err});
 });
 
 const port = process.env.PORT || 5000;

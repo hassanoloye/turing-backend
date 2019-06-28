@@ -26,7 +26,7 @@ export default class CRUDMixin {
 
     public async get(lookupKwargs: any = {}) {
         return await this.queryProcedure(this.procedureNames.get, lookupKwargs,
-            { action: queryActionTypes.FETCH, firstOnly: true});
+            {action: queryActionTypes.FETCH, firstOnly: true});
     }
 
     public async update(lookupKwargs: any = {}, values: any) {
@@ -50,7 +50,7 @@ export default class CRUDMixin {
             const procedureConfig = proceduresConfig[procedureName];
             const procedureParameters = procedureConfig && procedureConfig.parameters;
             const procedureArgs = procedureParameters && procedureParameters.length ?
-                procedureParameters.map((parameter: string) => `"${procedureKwargs[parameter]}"`) : Object.values(procedureKwargs);
+                procedureParameters.map((parameter: string) => procedureKwargs[parameter] != null ? `"${procedureKwargs[parameter]}"` : '""') : Object.values(procedureKwargs);
             procedureArgsCallString = `(${procedureArgs.join(",")})`;
         }
 
@@ -67,7 +67,7 @@ export default class CRUDMixin {
         const queryString = CRUDMixin._prepareQueryString(procedureName, procedureKwargs);
         const data = await sequelize.query(`CALL ${queryString}`);
         return (option.firstOnly && option.action === queryActionTypes.FETCH
-            || option.action === queryActionTypes.CREATE ) ? CRUDMixin._getFirstRecord(data) : data;
+            || option.action === queryActionTypes.CREATE) ? CRUDMixin._getFirstRecord(data) : data;
     }
 
 }

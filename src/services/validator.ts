@@ -25,6 +25,11 @@ export const stringAndRequired = {
     type: "string",
 };
 
+export const objectAndRequired = {
+    required: true,
+    type: "object",
+};
+
 export const stringAndNotRequired = {
     ...stringAndRequired,
     required: false
@@ -41,19 +46,18 @@ export const numberAndNotRequired = {
     required: false,
 };
 
-export const phoneNumberRequired = {
-    ...stringAndRequired,
-    maxLength: 11,
-    minLength: 11,
-    conform: (value: any) => {
-        return /^0[0-9]{10}$/.test(value);
-    },
-    messages: {
-        conform: "is not valid",
-    },
-};
-
 export const emailRequired = {
     ...stringAndRequired,
     format: 'email',
-}
+};
+
+export const conformToOneOf = (allowed: any[]) => {
+    return {
+        conform: (value: any) => {
+            return value ? allowed.includes(value) : true;
+        },
+        messages: {
+            conform: `is not valid. Must be one of ${allowed.join(", ")}`,
+        },
+    }
+};

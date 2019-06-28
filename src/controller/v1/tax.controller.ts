@@ -1,6 +1,7 @@
 import BaseController from "./base.controller";
 import {IRouteConfig} from "../../shared/interface/route-config";
 import {IProcedureNames} from "../../shared/interface/procedureNames";
+import {taxIdNumberExpected} from "../../middlewares/paramsValidator.middleware";
 
 const procedureNames: IProcedureNames = {
     getAll: 'catalog_get_tax_list',
@@ -17,8 +18,12 @@ export default class TaxController extends BaseController {
         method: 'get',
         fnName: 'get',
         relPath: '/:tax_id/',
-        middlewares: [],
+        middlewares: [
+            taxIdNumberExpected
+        ],
     }];
+    public modelName = 'tax';
+    public modelLookUpField: string = 'tax_id';
 
     constructor() {
         super({

@@ -1,3 +1,4 @@
+USE turing_test§;
 -- Create tshirtshop tables
 
 -- Create department table
@@ -193,7 +194,7 @@ END$$
 -- Create catalog_get_department_details stored procedure
 CREATE PROCEDURE catalog_get_department_details(IN inDepartmentId INT)
 BEGIN
-  SELECT name, description
+  SELECT department_id, name, description
   FROM   department
   WHERE  department_id = inDepartmentId;
 END$$
@@ -201,7 +202,7 @@ END$$
 -- Create catalog_get_categories_list stored procedure
 CREATE PROCEDURE catalog_get_categories_list(IN inDepartmentId INT)
 BEGIN
-  SELECT   category_id, name
+  SELECT   category_id, name, description, department_id
   FROM     category
   WHERE    department_id = inDepartmentId
   ORDER BY category_id;
@@ -210,7 +211,7 @@ END$$
 -- Create catalog_get_category_details stored procedure
 CREATE PROCEDURE catalog_get_category_details(IN inCategoryId INT)
 BEGIN
-  SELECT name, description
+  SELECT category_id, name, description, department_id
   FROM   category
   WHERE  category_id = inCategoryId;
 END$$
@@ -237,7 +238,7 @@ BEGIN
                   p.description,
                   CONCAT(LEFT(p.description, ?),
                          '...')) AS description,
-               p.price, p.discounted_price, p.thumbnail, p.display
+               p.price, p.discounted_price, p.thumbnail
     FROM       product p
     INNER JOIN product_category pc
                  ON p.product_id = pc.product_id
@@ -280,7 +281,7 @@ BEGIN
                         p.description,
                         CONCAT(LEFT(p.description, ?),
                                '...')) AS description,
-                     p.price, p.discounted_price, p.thumbnail
+                     p.price, p.discounted_price, p.thumbnail, p.display
      FROM            product p
      INNER JOIN      product_category pc
                        ON p.product_id = pc.product_id
@@ -337,7 +338,7 @@ END$$
 CREATE PROCEDURE catalog_get_product_details(IN inProductId INT)
 BEGIN
   SELECT product_id, name, description,
-         price, discounted_price, image, image_2
+         price, discounted_price, image, image_2, thumbnail, display
   FROM   product
   WHERE  product_id = inProductId;
 END$$
@@ -501,7 +502,7 @@ END$$
 -- Create catalog_get_department_categories stored procedure
 CREATE PROCEDURE catalog_get_department_categories(IN inDepartmentId INT)
 BEGIN
-  SELECT   category_id, name, description
+  SELECT   category_id, name, description, department_id
   FROM     category
   WHERE    department_id = inDepartmentId
   ORDER BY category_id;
@@ -701,11 +702,26 @@ BEGIN
 END$$
 
 -- Create catalog_get_categories stored procedure
-CREATE PROCEDURE catalog_get_categories()
+CREATE PROCEDURE catalog_get_categories(IN inOrderBy VARCHAR(11), IN inStartItem INT, IN inCategoriesPerPage INT)
 BEGIN
-  SELECT   category_id, name, description
-  FROM     category
-  ORDER BY category_id;
+  SET @query = concat('SELECT category_id, name, description, department_id FROM category ORDER BY ',
+                      inOrderBy, ' LIMIT ?, ?');
+
+  -- Prepare statement
+  PREPARE statement FROM @query;
+
+  -- Define query parameters
+  SET @p1 = inStartItem;
+  SET @p2 = inCategoriesPerPage;
+
+  EXECUTE statement USING @p1, @p2;
+END$$
+
+-- Create catalog_count_categories stored procedure
+CREATE PROCEDURE catalog_count_categories()
+BEGIN
+  SELECT COUNT(*) AS categories_count
+  FROM   category;
 END$$
 
 -- Create catalog_get_product_info stored procedure
@@ -825,9 +841,9 @@ BEGIN
 
   -- Create new shopping cart record, or increase quantity of existing record
   IF productQuantity IS NULL THEN
-    INSERT INTO shopping_cart(item_id, cart_id, product_id, attributes,
+    INSERT INTO shopping_cart(cart_id, product_id, attributes,
                               quantity, added_on)
-           VALUES (UUID(), inCartId, inProductId, inAttributes, 1, NOW());
+           VALUES (inCartId, inProductId, inAttributes, 1, NOW());
   ELSE
     UPDATE shopping_cart
     SET    quantity = quantity + 1, buy_now = true
@@ -840,6 +856,8 @@ END$$
 -- Create shopping_cart_update_product stored procedure
 CREATE PROCEDURE shopping_cart_update(IN inItemId INT, IN inQuantity INT)
 BEGIN
+  DECLARE itemCartId VARCHAR(32);
+
   IF inQuantity > 0 THEN
     UPDATE shopping_cart
     SET    quantity = inQuantity, added_on = NOW()
@@ -847,6 +865,12 @@ BEGIN
   ELSE
     CALL shopping_cart_remove_product(inItemId);
   END IF;
+
+  SELECT cart_id
+  FROM   shopping_cart
+  WHERE  item_id = inItemId LIMIT 1 INTO itemCartId;
+
+  CALL shopping_cart_get_products(itemCartId);
 END$$
 
 -- Create shopping_cart_remove_product stored procedure
@@ -948,6 +972,7 @@ BEGIN
 END$$
 
 -- Create orders_get_order_details stored procedure
+-- TODO: Update to return customer_id too so we can validate if customer owns the order
 CREATE PROCEDURE orders_get_order_details(IN inOrderId INT)
 BEGIN
   SELECT order_id, product_id, attributes, product_name,
@@ -1023,7 +1048,7 @@ BEGIN
 END$$
 
 -- Create customer_add stored procedure
-CREATE PROCEDURE customer_add(IN inName VARCHAR(50),
+CREATE PROCEDURE customer_add(IN inName VARCHAR(60),
   IN inEmail VARCHAR(100), IN inPassword VARCHAR(60))
 BEGIN
   INSERT INTO customer (name, email, password)
@@ -1040,6 +1065,24 @@ BEGIN
          shipping_region_id, day_phone, eve_phone, mob_phone
   FROM   customer
   WHERE  customer_id = inCustomerId;
+END$$
+
+-- Create customer_get_customer_with_email stored procedure
+CREATE PROCEDURE customer_get_customer_with_email(IN inEmail VARCHAR (100))
+BEGIN
+  SELECT customer_id, name, email, credit_card,
+         address_1, address_2, city, region, postal_code, country,
+         shipping_region_id, day_phone, eve_phone, mob_phone
+  FROM   customer
+  WHERE  email = inEmail;
+END$$
+
+-- Create customer_count_customer_with_email stored procedure
+CREATE PROCEDURE customer_count_customer_with_email(IN inEmail VARCHAR (100))
+BEGIN
+  SELECT COUNT(*) as customer_count
+  FROM   customer
+  WHERE  email = inEmail;
 END$$
 
 -- Create customer_update_account stored procedure
@@ -1301,6 +1344,19 @@ BEGIN
   WHERE  review_id = reviewId;
 END$$
 
+-- Create catalog_get_tax_list stored procedure
+CREATE PROCEDURE catalog_get_tax_list()
+BEGIN
+  SELECT tax_id, tax_type, tax_percentage FROM tax ORDER BY tax_id;
+END$$
+
+-- Create catalog_get_tax_details stored procedure
+CREATE PROCEDURE catalog_get_tax_details(IN inTaxId INT)
+BEGIN
+  SELECT tax_id, tax_type, tax_percentage
+  FROM   tax
+  WHERE  tax_id = inTaxId;
+END$$
+
 -- Change back DELIMITER to ;
 DELIMITER ;
-

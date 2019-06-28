@@ -13,6 +13,8 @@ import BaseController from "./base.controller";
 import {jwtExpires} from '../../config'
 import authMiddleware from "../../middlewares/auth.middleware";
 import {get, has} from "lodash";
+import {customErrorCodes, userFieldExist, userIncorrectCredentials, userNotFound} from "../../shared/errorCodes";
+import {CustomApiError, CustomError} from "../../shared/utils/error.util";
 
 
 export default class CustomersController extends BaseController {
@@ -40,6 +42,11 @@ export default class CustomersController extends BaseController {
         fnName: 'updateCreditCard',
         relPath: '/creditCard',
         middlewares: [authMiddleware],
+    }, {
+        method: 'get',
+        fnName: 'facebook',
+        relPath: '/facebook',
+        middlewares: [],
     }];
 
     private _loginSchema = {
@@ -77,9 +84,15 @@ export default class CustomersController extends BaseController {
     public async login(req: Request, res: Response, next: NextFunction) {
         try {
             validate(req.body, this._loginSchema);
-            return passport.authenticate('local', (err: Error, customer: any) => {
+            return passport.authenticate('local', (err: CustomError, customer: any) => {
                 if (err) {
-                    next(err)
+                    if (err.code === customErrorCodes.USER_NOT_FOUND) {
+                        return res.status(404).json(userNotFound('email'))
+                    } else if (err.code === customErrorCodes.USER_CREDENTIALS_INCORRECT) {
+                        return res.status(401).json(userIncorrectCredentials())
+                    } else {
+                        next(err)
+                    }
                 } else {
                     const token = createToken(customer);
                     return res.json({customer: {schema: customer}, accessToken: token, expiresIn: jwtExpires})
@@ -93,16 +106,19 @@ export default class CustomersController extends BaseController {
     public async create(req: Request, res: Response, next: NextFunction) {
         try {
             validate(req.body, this._createCustomerSchema, {unknownProperties: 'error'});
+            const customerWithEmailCount = await this.performCustomQueryCount(
+                'customer_count_customer_with_email', {email: req.body.email});
+            if (customerWithEmailCount) {
+                throw new CustomApiError(409, userFieldExist('email'))
+            }
+
             const createKwargs = {...req.body};
             createKwargs.password = hashPassword(createKwargs.password);
 
             await this.performCustomQuery('customer_add', createKwargs);
 
-            // TODO: Return data without much query;
-            const customer: any = await this.performCustomQuery('customer_get_login_info',
+            const customerDetails: any = await this.performCustomQuery('customer_get_customer_with_email',
                 {email: createKwargs.email}, this.fetchQueryDefaultOptions);
-            const customerDetails: any = await this.performCustomQuery('customer_get_customer',
-                {customer_id: customer.customer_id}, this.fetchQueryDefaultOptions);
             const token = createToken(customerDetails);
 
             return res.status(201).json(
@@ -135,7 +151,7 @@ export default class CustomersController extends BaseController {
         }
     }
 
-     public async updateCreditCard(req: Request, res: Response, next: NextFunction) {
+    public async updateCreditCard(req: Request, res: Response, next: NextFunction) {
         try {
             validate(req.body, this._updateCustomerCreditCardSchema, {unknownProperties: 'error'});
             const customerLookUp = {customer_id: req.user.id};
@@ -150,5 +166,9 @@ export default class CustomersController extends BaseController {
         } catch (e) {
             next(e)
         }
+    }
+
+    public async facebook(req: Request, res: Response, next: NextFunction) {
+        return res.json({})
     }
 }

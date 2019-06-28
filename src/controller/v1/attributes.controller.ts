@@ -2,6 +2,11 @@ import BaseController from "./base.controller";
 import {IRouteConfig} from "../../shared/interface/route-config";
 import {IProcedureNames} from "../../shared/interface/procedureNames";
 import {NextFunction, Request, Response} from "express";
+import {
+    attributeIdNumberExpected,
+    attributeWithIdExist,
+    productIdNumberExpected
+} from "../../middlewares/paramsValidator.middleware";
 
 const procedureNames: IProcedureNames = {
     getAll: 'catalog_get_attributes',
@@ -18,18 +23,28 @@ export default class AttributesController extends BaseController {
         method: 'get',
         fnName: 'get',
         relPath: '/:attribute_id/',
-        middlewares: [],
+        middlewares: [
+            attributeIdNumberExpected,
+        ],
     }, {
         method: 'get',
         fnName: 'getAttributeValues',
         relPath: '/values/:attribute_id',
-        middlewares: [],
+        middlewares: [
+            attributeIdNumberExpected,
+            attributeWithIdExist,
+        ],
     }, {
         method: 'get',
         fnName: 'getProductAttributes',
         relPath: '/inProduct/:product_id',
-        middlewares: [],
+        middlewares: [
+            productIdNumberExpected,
+            attributeWithIdExist
+        ],
     }];
+    public modelName = 'attribute';
+    public modelLookUpField = 'attribute_id';
 
     constructor() {
         super({

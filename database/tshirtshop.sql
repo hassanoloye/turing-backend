@@ -367,7 +367,7 @@ END$$
 -- Create catalog_get_department_details stored procedure
 CREATE PROCEDURE catalog_get_department_details(IN inDepartmentId INT)
 BEGIN
-  SELECT name, description
+  SELECT department_id, name, description
   FROM   department
   WHERE  department_id = inDepartmentId;
 END$$
@@ -375,7 +375,7 @@ END$$
 -- Create catalog_get_categories_list stored procedure
 CREATE PROCEDURE catalog_get_categories_list(IN inDepartmentId INT)
 BEGIN
-  SELECT   category_id, name
+  SELECT   category_id, name, description, department_id
   FROM     category
   WHERE    department_id = inDepartmentId
   ORDER BY category_id;
@@ -384,7 +384,7 @@ END$$
 -- Create catalog_get_category_details stored procedure
 CREATE PROCEDURE catalog_get_category_details(IN inCategoryId INT)
 BEGIN
-  SELECT name, description
+  SELECT category_id, name, description, department_id
   FROM   category
   WHERE  category_id = inCategoryId;
 END$$
@@ -511,7 +511,7 @@ END$$
 CREATE PROCEDURE catalog_get_product_details(IN inProductId INT)
 BEGIN
   SELECT product_id, name, description,
-         price, discounted_price, image, image_2
+         price, discounted_price, image, image_2, thumbnail, display
   FROM   product
   WHERE  product_id = inProductId;
 END$$
@@ -675,7 +675,7 @@ END$$
 -- Create catalog_get_department_categories stored procedure
 CREATE PROCEDURE catalog_get_department_categories(IN inDepartmentId INT)
 BEGIN
-  SELECT   category_id, name, description
+  SELECT   category_id, name, description, department_id
   FROM     category
   WHERE    department_id = inDepartmentId
   ORDER BY category_id;
@@ -875,11 +875,26 @@ BEGIN
 END$$
 
 -- Create catalog_get_categories stored procedure
-CREATE PROCEDURE catalog_get_categories()
+CREATE PROCEDURE catalog_get_categories(IN inOrderBy VARCHAR(11), IN inStartItem INT, IN inCategoriesPerPage INT)
 BEGIN
-  SELECT   category_id, name, description
-  FROM     category
-  ORDER BY category_id;
+  SET @query = concat('SELECT category_id, name, description, department_id FROM category ORDER BY ',
+                      inOrderBy, ' LIMIT ?, ?');
+
+  -- Prepare statement
+  PREPARE statement FROM @query;
+
+  -- Define query parameters
+  SET @p1 = inStartItem;
+  SET @p2 = inCategoriesPerPage;
+
+  EXECUTE statement USING @p1, @p2;
+END$$
+
+-- Create catalog_count_categories stored procedure
+CREATE PROCEDURE catalog_count_categories()
+BEGIN
+  SELECT COUNT(*) AS categories_count
+  FROM   category;
 END$$
 
 -- Create catalog_get_product_info stored procedure
@@ -1014,6 +1029,8 @@ END$$
 -- Create shopping_cart_update_product stored procedure
 CREATE PROCEDURE shopping_cart_update(IN inItemId INT, IN inQuantity INT)
 BEGIN
+  DECLARE itemCartId VARCHAR(32);
+
   IF inQuantity > 0 THEN
     UPDATE shopping_cart
     SET    quantity = inQuantity, added_on = NOW()
@@ -1021,6 +1038,12 @@ BEGIN
   ELSE
     CALL shopping_cart_remove_product(inItemId);
   END IF;
+
+  SELECT cart_id
+  FROM   shopping_cart
+  WHERE  item_id = inItemId LIMIT 1 INTO itemCartId;
+
+  CALL shopping_cart_get_products(itemCartId);
 END$$
 
 -- Create shopping_cart_remove_product stored procedure
@@ -1215,6 +1238,24 @@ BEGIN
          shipping_region_id, day_phone, eve_phone, mob_phone
   FROM   customer
   WHERE  customer_id = inCustomerId;
+END$$
+
+-- Create customer_get_customer_with_email stored procedure
+CREATE PROCEDURE customer_get_customer_with_email(IN inEmail VARCHAR (100))
+BEGIN
+  SELECT customer_id, name, email, credit_card,
+         address_1, address_2, city, region, postal_code, country,
+         shipping_region_id, day_phone, eve_phone, mob_phone
+  FROM   customer
+  WHERE  email = inEmail;
+END$$
+
+-- Create customer_count_customer_with_email stored procedure
+CREATE PROCEDURE customer_count_customer_with_email(IN inEmail VARCHAR (100))
+BEGIN
+  SELECT COUNT(*) as customer_count
+  FROM   customer
+  WHERE  email = inEmail;
 END$$
 
 -- Create customer_update_account stored procedure

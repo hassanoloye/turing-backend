@@ -2,7 +2,14 @@ import BaseController from "./base.controller";
 import {IRouteConfig} from "../../shared/interface/route-config";
 import {IProcedureNames} from "../../shared/interface/procedureNames";
 import {NextFunction, Request, Response} from "express";
-import {numberAndRequired, stringAndNotRequired, stringAndRequired, validate} from "../../services/validator";
+import {
+    conformToOneOf,
+    numberAndRequired,
+    objectAndRequired,
+    stringAndNotRequired,
+    stringAndRequired,
+    validate
+} from "../../services/validator";
 import {IS_DEV_MODE, stripeDefaultCurrency, stripeEndpointSecret} from "../../config";
 import stripe from "../../setup/stripe.setup"
 import currencyCodes from "../../shared/currencyCodes";
@@ -33,12 +40,18 @@ export default class StripeController extends BaseController {
                 ...stringAndNotRequired,
                 minLength: 3,
                 maxLength: 3,
-                conform: (value: any) => {
-                    return currencyCodes.includes(value);
-                },
-                messages: {
-                    conform: `is not valid. Must be one of ${currencyCodes.join(", ")}`,
-                },
+                ...conformToOneOf(currencyCodes),
+            }
+        }
+    };
+    private _stripeWebhooksSchema = {
+        properties: {
+            type: stringAndRequired,
+            data: {
+                ...objectAndRequired,
+                properties: {
+                    object: objectAndRequired
+                }
             },
         }
     };
@@ -68,30 +81,34 @@ export default class StripeController extends BaseController {
     }
 
     public async webhooks(req: Request, res: Response, next: NextFunction) {
-        const sig = req.headers['stripe-signature'];
-        let event;
+        try {
+            validate(req.body, this._stripeWebhooksSchema, {unknownProperties: 'error'});
 
-        if (IS_DEV_MODE) {
-            event = req.body;
-        } else {
-            // Validate signature in production
-            try {
-                event = await stripe.webhooks.constructEvent(req.body, sig, stripeEndpointSecret);
-            } catch (err) {
-                return res.status(400).json({message: `Webhook Error: ${err.message}`});
+            let event;
+            if (IS_DEV_MODE) {
+                event = req.body;
+            } else {
+                // Validate signature in production
+                try {
+                    const sig = req.headers['stripe-signature'];
+                    event = await stripe.webhooks.constructEvent(req.body, sig, stripeEndpointSecret);
+                } catch (err) {
+                    return res.status(400).json({message: `Webhook Error: ${err.message}`});
+                }
             }
-        }
-        // Handle the event
-        switch (event.type) {
-            case 'charge.succeeded':
-                console.log('Charge succeeded', event.data.object);
-                break;
-            default:
-                // Unexpected event type
-                return res.status(400).send({message: `Unexpected event type: ${event.type}`});
-        }
+            // Handle the event
+            switch (event.type) {
+                case 'charge.succeeded':
+                    break;
+                default:
+                    // Unexpected event type
+                    return res.status(400).send({message: `Unexpected event type: ${event.type}`});
+            }
 
-        // Return a response to acknowledge receipt of the event
-        return res.json({received: true});
+            // Return a response to acknowledge receipt of the event
+            return res.json({received: true});
+        } catch (err) {
+            next(err);
+        }
     }
 }

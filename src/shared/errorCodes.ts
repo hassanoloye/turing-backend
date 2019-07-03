@@ -56,26 +56,29 @@ export const userIncorrectCredentials = () => {
     }
 };
 
-export const emptyAuthorizationCode = () => {
+export const emptyAuthorizationCode = (authorizationKey: string) => {
     return {
         code: 'AUT_01',
-        message: ' Authorization code is empty',
+        message: 'Authorization code is empty',
+        field: authorizationKey,
         status: 401,
     }
 };
 
-export const unauthorizedAccess = () => {
+export const unauthorizedAccess = (authorizationKey: string) => {
     return {
         code: 'AUT_02',
         message: 'Access Unauthorized',
+        field: authorizationKey,
         status: 401,
     }
 };
 
-export const expiredAccessToken = () => {
+export const expiredAccessToken = (authorizationKey: string) => {
     return {
         code: 'AUT_03',
         message: 'Access token has expired. You are required to login again!',
+        field: authorizationKey,
         status: 401,
     }
 };
@@ -84,6 +87,7 @@ export const noAuthorizationKey = (authorizationKey: string) => {
     return {
         code: 'AUT_04',
         message: `Missing auth key. Please provided key in headers.${authorizationKey}`,
+        field: authorizationKey,
         status: 401,
     }
 };

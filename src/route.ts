@@ -1,9 +1,12 @@
 import {Application, NextFunction, Request, Response, Router} from "express";
 import * as path from "path";
+import YAML from 'yamljs';
+import swaggerUi from 'swagger-ui-express';
 
 const requireAll = require("require-all");
+const docsPath = path.resolve(__dirname, '../docs/v1/spec.yaml');
 
-
+const swaggerDocument = YAML.load(docsPath);
 const apiPath = '/api/v1';
 
 const configureRoutes = (app: Application) => {
@@ -21,6 +24,7 @@ const configureRoutes = (app: Application) => {
     apiRouter.get("/", (req, res, next) => {
         res.json({message: "Welcome to Turing Backend API!"});
     });
+    apiRouter.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     apiRouter.use((req, res, next) => {
         console.log(`Request (${req.method}) to ${req.url}`);
         next()

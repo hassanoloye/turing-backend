@@ -48,7 +48,6 @@ export const shippingRegionIdNumberExpected = isExpectedType('shipping_region', 
 export const attributeWithIdExist = recordExist('attribute', 'attribute_id', 'id');
 export const categoryWithIdExist = recordExist('category', 'category_id', 'id');
 export const departmentWithIdExist = recordExist('department', 'department_id', 'id');
-export const orderWithIdExist = recordExist('order', 'order_id', 'id');
 export const productWithIdExist = recordExist('product', 'product_id', 'id');
 export const shoppingCartWithItemIdExist = recordExist('shopping_cart', 'item_id',);
 export const shoppingCartWithCartIdExist = recordExist('shopping_cart', 'cart_id',);

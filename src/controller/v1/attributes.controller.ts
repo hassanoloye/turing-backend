@@ -5,7 +5,7 @@ import {NextFunction, Request, Response} from "express";
 import {
     attributeIdNumberExpected,
     attributeWithIdExist,
-    productIdNumberExpected
+    productIdNumberExpected, productWithIdExist
 } from "../../middlewares/paramsValidator.middleware";
 
 const procedureNames: IProcedureNames = {
@@ -40,7 +40,7 @@ export default class AttributesController extends BaseController {
         relPath: '/inProduct/:product_id',
         middlewares: [
             productIdNumberExpected,
-            attributeWithIdExist
+            productWithIdExist
         ],
     }];
     public modelName = 'attribute';

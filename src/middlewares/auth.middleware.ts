@@ -13,15 +13,15 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     }
 
     if (!req.headers[headerAuthorizationKey]) {
-        return res.status(401).json(emptyAuthorizationCode());
+        return res.status(401).json(emptyAuthorizationCode(userAuthorizationKey));
     }
     const token = getTokenFromAuthorization(req.headers[headerAuthorizationKey] || '');
     jwt.verify(token, jwtSecret, (err: Error, decoded: any) => {
         if (err) {
             if (err.message === 'jwt expired') {
-                return res.status(401).json(expiredAccessToken());
+                return res.status(401).json(expiredAccessToken(userAuthorizationKey));
             } else {
-                return res.status(401).json(unauthorizedAccess());
+                return res.status(401).json(unauthorizedAccess(userAuthorizationKey));
             }
         }
         req.user = decoded;

@@ -11,14 +11,12 @@
     "build": "tsc",
     "prewatch": "npm run versions-check",
     "dev": "nodemon -r dotenv/config dist/app.js",
+    "start": "node -r dotenv/config dist/app.js",
     "watch": "tsc --watch",
     "test": "mocha -r ts-node/register --file ./tests/setup.ts tests/**/*.test.ts --exit",
     "versions-check": "node -r dotenv/config scripts/check_versions.js",
     "config:procedure": "node -r dotenv/config scripts/generate_mysql_procedure_config",
-    "config:table": "node -r dotenv/config scripts/generate_mysql_table_config",
-    "db:execute": "node scripts/execute_db_query",
-    "db:test:execute": "NODE_ENV=test node scripts/execute_db_query",
-    "preinstall": "npm run versions-check"
+    "config:table": "node -r dotenv/config scripts/generate_mysql_table_config"
   },
   "repository": {
     "type": "git",

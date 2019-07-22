@@ -1,4 +1,4 @@
-USE turing_test§;
+USE turing_test;
 -- Create tshirtshop tables
 
 -- Create department table

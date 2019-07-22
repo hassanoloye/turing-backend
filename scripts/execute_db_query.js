@@ -12,7 +12,6 @@ dotenv.config({path: path.join(baseDir, IS_TEST_MODE ? ".test.env" : ".env")});
 const fileRelPath = IS_TEST_MODE ? 'tshirtshop.test.sql' : 'tshirtshop.sql';
 const fileContents = fs.readFileSync(path.resolve(__dirname, '../database', fileRelPath), 'utf8')
 const purifiedFileContents = fileContents.replace(/\r?\n|\r/g, ' ')
-console.log(fileRelPath)
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
     logging: false,
     dialectOptions: {
@@ -22,7 +21,6 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 
 async function executeQuery() {
     try {
-        console.log(purifiedFileContents)
         await sequelize.query(fileContents)
         console.log('done')
     } catch (e) {

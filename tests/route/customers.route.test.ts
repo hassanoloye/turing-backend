@@ -21,7 +21,6 @@ describe('Test for Customer routes', () => {
                 .send({email: customer.email, password: customer.password})
                 .expect(200)
                 .end(function (err, res) {
-                    console.log(res.body)
                     expect(Boolean(res.body.accessToken)).to.equal(true);
                     expect(Boolean(res.body.customer.schema)).to.equal(true);
                     expect(Boolean(res.body.expiresIn)).to.equal(true);

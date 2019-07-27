@@ -1,0 +1,84 @@
+{
+    "attribute": {
+        "primaryKeys": [
+            "attribute_id"
+        ]
+    },
+    "attribute_value": {
+        "primaryKeys": [
+            "attribute_value_id"
+        ]
+    },
+    "audit": {
+        "primaryKeys": [
+            "audit_id"
+        ]
+    },
+    "category": {
+        "primaryKeys": [
+            "category_id"
+        ]
+    },
+    "customer": {
+        "primaryKeys": [
+            "customer_id"
+        ]
+    },
+    "department": {
+        "primaryKeys": [
+            "department_id"
+        ]
+    },
+    "order_detail": {
+        "primaryKeys": [
+            "item_id"
+        ]
+    },
+    "orders": {
+        "primaryKeys": [
+            "order_id"
+        ]
+    },
+    "product": {
+        "primaryKeys": [
+            "product_id"
+        ]
+    },
+    "product_attribute": {
+        "primaryKeys": [
+            "product_id",
+            "attribute_value_id"
+        ]
+    },
+    "product_category": {
+        "primaryKeys": [
+            "product_id",
+            "category_id"
+        ]
+    },
+    "review": {
+        "primaryKeys": [
+            "review_id"
+        ]
+    },
+    "shipping": {
+        "primaryKeys": [
+            "shipping_id"
+        ]
+    },
+    "shipping_region": {
+        "primaryKeys": [
+            "shipping_region_id"
+        ]
+    },
+    "shopping_cart": {
+        "primaryKeys": [
+            "item_id"
+        ]
+    },
+    "tax": {
+        "primaryKeys": [
+            "tax_id"
+        ]
+    }
+}

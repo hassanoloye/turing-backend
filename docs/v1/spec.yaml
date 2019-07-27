@@ -1,0 +1,2131 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Turing ECommerce API
+  description: Official documentation about Turing Ecommerce API
+servers:
+  - url: '/api/v1'
+
+# Tags
+tags:
+  - name: Attributes
+    description: Everything about Attributes
+  - name: Categories
+    description: Everything about Categories
+  - name: Customers
+    description: Everything about Customers
+  - name: Departments
+    description: Everything about Departments
+  - name: Orders
+    description: Everything about Orders
+  - name: Products
+    description: Everything about Products
+  - name: Shipping
+    description: Everything about Shippings
+  - name: Shoppingcart
+    description: Everything about Shopping Carts
+  - name: Stripe
+    description: Everything about Stripe Ingregation and Webhooks
+  - name: Tax
+    description: Everything about Taxes
+
+# Paths
+paths:
+  /attributes:
+    get:
+      tags:
+        - Attributes
+      summary: Get Attributes
+      description: Return list of Attributes
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/AttributeGetAllSuccess"
+
+  "/attributes/{attribute_id}":
+    get:
+      tags:
+        - Attributes
+      summary: Get Attribute by ID
+      description: Return Attribute details
+      parameters:
+        - name: attribute_id
+          in: path
+          description: Attribute Id
+          required: true
+          schema:
+            type: integer
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/AttributeGetByIdSuccess"
+        "400":
+          $ref: "#/components/responses/AttributeGetByIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/AttributeGetByIdNotFoundError"
+
+  "/attributes/values/{attribute_id}":
+    get:
+      tags:
+        - Attributes
+      summary: Get Values Attribute from Atribute
+      description: Return a list of Attributes Values
+      parameters:
+        - name: attribute_id
+          in: path
+          description: Attribute Id
+          required: true
+          schema:
+            type: integer
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/AttributeGetValuesByIdSuccess"
+        "400":
+          $ref: "#/components/responses/AttributeGetByIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/AttributeGetByIdNotFoundError"
+
+  "/attributes/inProduct/{product_id}":
+    get:
+      tags:
+        - Attributes
+      summary: Get all Attributes with Product ID
+      description: Return a list of Attributes Values for Product
+      parameters:
+        - name: product_id
+          in: path
+          description: Product Id
+          required: true
+          schema:
+            type: integer
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/AttributeGetValuesByProductIdSuccess"
+        "400":
+          $ref: "#/components/responses/ProductGetByIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/ProductGetByIdNotFoundError"
+
+  /categories:
+    get:
+      tags:
+        - Categories
+      summary: Get Categories
+      description: Return list of categories
+      parameters:
+        - name: order
+          in: query
+          description: "Sorting a field. Allowed fields: 'category_id', 'name'. Default: category_id"
+          required: false
+          schema:
+            type: string
+            enum:
+              - category_id
+              - name
+          example: category_id
+        - name: page
+          in: query
+          description: "Inform the page. Starting with 1. Default: 1"
+          required: false
+          schema:
+            type: integer
+          example: 1
+        - name: limit
+          in: query
+          description: "Limit per page, Default: 20"
+          required: false
+          schema:
+            type: integer
+          example: 20
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/CategoryGetAllSuccess"
+  "/categories/{category_id}":
+    get:
+      tags:
+        - Categories
+      summary: Get Category by ID
+      description: Return a category by ID
+      parameters:
+        - name: category_id
+          in: path
+          required: true
+          description: ID of Category
+          schema:
+            type: integer
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/CategoryGetByIdSuccess"
+        "400":
+          $ref: "#/components/responses/CategoryGetByIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/CategoryGetByIdNotFoundError"
+  "/categories/inProduct/{product_id}":
+    get:
+      tags:
+        - Categories
+      summary: Get Categories of Product
+      description: Return list of categories for Product
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          description: ID of Product
+          schema:
+            type: integer
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/CategoryGetByProductIdSuccess"
+        "400":
+          $ref: "#/components/responses/ProductGetByIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/ProductGetByIdNotFoundError"
+  "/categories/inDepartment/{department_id}":
+    get:
+      tags:
+        - Categories
+      summary: Get Categories of Department
+      description: Return a list of categories for Department
+      parameters:
+        - name: department_id
+          in: path
+          required: true
+          description: ID of Department
+          schema:
+            type: integer
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/CategoryGetByDepartmentIdSuccess"
+        "400":
+          $ref: "#/components/responses/DepartmentGetByIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/DepartmentGetByIdNotFoundError"
+  /customer:
+    put:
+      tags:
+        - Customers
+      summary: Update a customer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  description: Customer name
+                  type: string
+                email:
+                  description: Customer email
+                  type: string
+                password:
+                  description: Customer password
+                  type: string
+                day_phone:
+                  description: Customer day phone
+                  type: string
+                eve_phone:
+                  description: Customer eve phone
+                  type: string
+                mob_phone:
+                  description: Customer mob phone
+                  type: string
+              required:
+                - name
+                - email
+      responses:
+        "200":
+          $ref: "#/components/responses/CustomerUpdateSuccess"
+        "401":
+          $ref: "#/components/responses/CustomerUnAuthorizedError"
+      security:
+        - UserSecurity: []
+    get:
+      tags:
+        - Customers
+      summary: Get a customer by ID. The customer is getting by Token
+      responses:
+        "200":
+          $ref: "#/components/responses/CustomerGetSuccess"
+        "401":
+          $ref: "#/components/responses/CustomerUnAuthorizedError"
+      security:
+        - UserSecurity: []
+  /customers:
+    post:
+      tags:
+        - Customers
+      summary: Register a Customer
+      description: Record a customer
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  description: Name of User
+                  type: string
+                email:
+                  description: Email of User
+                  type: string
+                password:
+                  description: Password of User
+                  type: string
+              required:
+                - name
+                - email
+                - password
+      responses:
+        "200":
+          $ref: "#/components/responses/CustomerAuthenticateSuccess"
+        "404":
+          $ref: "#/components/responses/CustomerEmailAlreadyExistError"
+
+  /customers/login:
+    post:
+      tags:
+        - Customers
+      summary: Sign in in the Shopping
+      description: Customer Login
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  description: Email of User
+                  type: string
+                password:
+                  description: Password of User
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        "200":
+          $ref: "#/components/responses/CustomerAuthenticateSuccess"
+        "400":
+          $ref: "#/components/responses/CustomerInvalidCredentialsError"
+  /customers/facebook:
+    post:
+      tags:
+        - Customers
+      summary: Sign in with a facebook login token
+      description: Customer Login with Facebook
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                access_token:
+                  description: Token generated from your facebook login
+                  type: string
+              required:
+                - access_token
+      responses:
+        "200":
+          $ref: "#/components/responses/CustomerAuthenticateSuccess"
+        "400":
+          $ref: "#/components/responses/CustomerUnAuthorizedError"
+  /customers/address:
+    put:
+      tags:
+        - Customers
+      summary: Update the address from customer
+      security:
+        - UserSecurity: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                address_1:
+                  description: Address 1
+                  type: string
+                address_2:
+                  description: Address 2
+                  type: string
+                city:
+                  description: City
+                  type: string
+                region:
+                  description: Region
+                  type: string
+                postal_code:
+                  description: Postal Code
+                  type: string
+                country:
+                  description: Country
+                  type: string
+                shipping_region_id:
+                  description: Shipping Region ID
+                  type: integer
+              required:
+                - address_1
+                - city
+                - region
+                - postal_code
+                - country
+                - shipping_region_id
+      responses:
+        "200":
+          $ref: "#/components/responses/CustomerGetSuccess"
+        "401":
+          $ref: "#/components/responses/CustomerUnAuthorizedError"
+
+  /customers/creditCard:
+    put:
+      tags:
+        - Customers
+      summary: Update the credit card from customer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                credit_card:
+                  description: Credit Card
+                  type: string
+              required:
+                - credit_card
+      security:
+        - UserSecurity: []
+      responses:
+        "200":
+          $ref: "#/components/responses/CustomerGetSuccess"
+        "401":
+          $ref: "#/components/responses/CustomerUnAuthorizedError"
+
+  /departments:
+    get:
+      tags:
+        - Departments
+      summary: Get Departments
+      description: Return a list of departments
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/DepartmentGetAllSuccess"
+
+  "/departments/{department_id}":
+    get:
+      tags:
+        - Departments
+      summary: Get Department by ID
+      description: Return a department matching provided ID
+      security: []
+      parameters:
+        - name: department_id
+          in: path
+          required: true
+          description: ID of Department
+          schema:
+            type: integer
+      responses:
+        "200":
+          $ref: "#/components/responses/DepartmentGetByIdSuccess"
+        "400":
+          $ref: "#/components/responses/DepartmentGetByIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/DepartmentGetByIdNotFoundError"
+
+  /orders:
+    post:
+      tags:
+        - Orders
+      summary: Create an Order
+      security:
+        - UserSecurity: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cart_id:
+                  description: Cart ID
+                  type: string
+                shipping_id:
+                  description: Shipping ID
+                  type: integer
+                tax_id:
+                  description: Tax ID
+                  type: integer
+              required:
+                - cart_id
+                - shipping_id
+                - tax_id
+      responses:
+        "200":
+          $ref: "#/components/responses/OrderCreateSuccess"
+
+  "/orders/{order_id}":
+    get:
+      tags:
+        - Orders
+      summary: Get Info about Order
+      parameters:
+        - name: order_id
+          in: path
+          description: Order ID
+          required: true
+          schema:
+            type: integer
+      security:
+        - UserSecurity: []
+      responses:
+        "200":
+          $ref: "#/components/responses/OrderInfoSuccess"
+        "400":
+          $ref: "#/components/responses/OrderGetByIdNotNumberError"
+        "401":
+          $ref: "#/components/responses/CustomerUnAuthorizedError"
+        "404":
+          $ref: "#/components/responses/OrderGetByIdNotFoundError"
+
+  /orders/inCustomer:
+    get:
+      tags:
+        - Orders
+      summary: Get orders by Customer
+      security:
+        - UserSecurity: []
+      responses:
+        "200":
+          $ref: "#/components/responses/OrderGetAllForCustomerSuccess"
+        "401":
+          $ref: "#/components/responses/CustomerUnAuthorizedError"
+  "/orders/shortDetail/{order_id}":
+    get:
+      tags:
+        - Orders
+      summary: Get Order short detail
+      parameters:
+        - name: order_id
+          in: path
+          description: Order ID
+          required: true
+          schema:
+            type: integer
+      security:
+        - UserSecurity: []
+      responses:
+        "200":
+          $ref: "#/components/responses/OrderShortDetailSuccess"
+        "400":
+          $ref: "#/components/responses/OrderGetByIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/OrderGetByIdNotFoundError"
+
+  /products:
+    get:
+      tags:
+        - Products
+      summary: Get All Products
+      description: Return a list of products
+      parameters:
+        - name: page
+          in: query
+          description: "Inform the page. Starting with 1. Default: 1"
+          required: false
+          schema:
+            type: integer
+          example: 1
+        - name: limit
+          in: query
+          description: "Limit per page, Default: 20."
+          required: false
+          schema:
+            type: integer
+          example: 20
+        - name: description_length
+          in: query
+          description: "Limit of the description, Default: 200."
+          required: false
+          schema:
+            type: integer
+          example: 200
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/ProductGetAllSuccess"
+
+  /products/search:
+    get:
+      tags:
+        - Products
+      summary: Search products
+      parameters:
+        - name: query_string
+          in: query
+          description: Query to search
+          required: true
+          schema:
+            type: string
+        - name: all_words
+          in: query
+          description: "All words or no. Default: on"
+          required: false
+          schema:
+            type: string
+            enum:
+              - on
+              - off
+        - name: page
+          in: query
+          description: "Inform the page. Starting with 1. Default: 1"
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: "Limit per page, Default: 20"
+          required: false
+          schema:
+            type: integer
+        - name: description_length
+          in: query
+          description: "Limit of the description, Default: 200"
+          required: false
+          schema:
+            type: integer
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/ProductSearchSuccess"
+
+  "/products/{product_id}":
+    get:
+      tags:
+        - Products
+      summary: Product by ID
+      parameters:
+        - name: product_id
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: integer
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/ProductGetByIdSuccess"
+        "400":
+          $ref: "#/components/responses/ProductGetByIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/ProductGetByIdNotFoundError"
+
+  "/products/inCategory/{category_id}":
+    get:
+      tags:
+        - Products
+      summary: Get a list of Products for Category
+      parameters:
+        - name: category_id
+          in: path
+          description: Category ID
+          required: true
+          schema:
+            type: integer
+        - name: page
+          in: query
+          description: Inform the page. Starting with 1
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Limit per page
+          required: false
+          schema:
+            type: integer
+        - name: description_length
+          in: query
+          description: Limit to description
+          required: false
+          schema:
+            type: integer
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/ProductGetAllSuccess"
+        "400":
+          $ref: "#/components/responses/CategoryGetByIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/CategoryGetByIdNotFoundError"
+
+  "/products/inDepartment/{department_id}":
+    get:
+      tags:
+        - Products
+      summary: Get a list of Products for Department
+      parameters:
+        - name: department_id
+          in: path
+          description: Department ID
+          required: true
+          schema:
+            type: integer
+        - name: page
+          in: query
+          description: Inform the page. Starting with 1
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Limit per page
+          required: false
+          schema:
+            type: integer
+        - name: description_length
+          in: query
+          description: Limit to description
+          required: false
+          schema:
+            type: integer
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/ProductGetAllByDepartmentSuccess"
+        "400":
+          $ref: "#/components/responses/DepartmentGetByIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/DepartmentGetByIdNotFoundError"
+
+  "/products/{product_id}/details":
+    get:
+      tags:
+        - Products
+      summary: Get Product details
+      parameters:
+        - name: product_id
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: integer
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/ProductGetByIdSuccess"
+        "400":
+          $ref: "#/components/responses/ProductGetByIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/ProductGetByIdNotFoundError"
+
+  "/products/{product_id}/locations":
+    get:
+      tags:
+        - Products
+      summary: Get locations of a Product
+      parameters:
+        - name: product_id
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: integer
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/ProductGetLocationsByIdSuccess"
+        "400":
+          $ref: "#/components/responses/ProductGetByIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/ProductGetByIdNotFoundError"
+
+  "/products/{product_id}/reviews":
+    get:
+      tags:
+        - Products
+      summary: Get reviews of Product
+      parameters:
+        - name: product_id
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: integer
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/ProductGetReviewsByIdSuccess"
+        "400":
+          $ref: "#/components/responses/ProductGetByIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/ProductGetByIdNotFoundError"
+    post:
+      tags:
+        - Products
+      parameters:
+        - name: product_id
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                review:
+                  description: Review Text of Product
+                  type: string
+                rating:
+                  description: Rating of Product
+                  type: integer
+              required:
+                - review
+                - rating
+      security:
+        - UserSecurity: []
+      responses:
+        "200":
+          $ref: "#/components/responses/ProductCreateReviewSuccess"
+        "400":
+          $ref: "#/components/responses/ProductGetByIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/ProductGetByIdNotFoundError"
+
+  /tax:
+    get:
+      tags:
+        - Tax
+      summary: Get All Taxes
+      description: Return a list of taxes
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/TaxGetAllSuccess"
+
+  "/tax/{tax_id}":
+    get:
+      tags:
+        - Tax
+      summary: Get Tax by ID
+      description: Return a tax by ID
+      parameters:
+        - name: tax_id
+          in: path
+          required: true
+          description: ID of Tax
+          schema:
+            type: integer
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/TaxGetByIdSuccess"
+        "400":
+          $ref: "#/components/responses/TaxGetByIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/TaxGetByIdNotFoundError"
+
+  /shipping/regions:
+    get:
+      tags:
+        - Shipping
+      summary: Return list of shippings regions
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/ShippingRegionGetAllSuccess"
+
+  "/shipping/regions/{shipping_region_id}":
+    get:
+      tags:
+        - Shipping
+      summary: Return shipping regions by ID
+      parameters:
+        - name: shipping_region_id
+          in: path
+          description: Shipping Region Id
+          required: true
+          schema:
+            type: integer
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/ShippingRegionGetByIdSuccess"
+        "400":
+          $ref: "#/components/responses/ShippingRegionGetByIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/ShippingRegionGetByIdNotFoundError"
+
+  /shoppingcart/generateUniqueId:
+    get:
+      tags:
+        - Shoppingcart
+      summary: Generete the unique CART ID
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/ShoppingCartGetCartIdSuccess"
+
+  /shoppingcart/add:
+    post:
+      tags:
+        - Shoppingcart
+      summary: Add a Product in the cart
+      description: put a product in the cart
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cart_id:
+                  description: Cart ID
+                  type: string
+                product_id:
+                  description: Product ID
+                  type: integer
+                attributes:
+                  description: Attributes of Product
+                  type: string
+              required:
+                - cart_id
+                - product_id
+                - attributes
+      responses:
+        "200":
+          $ref: "#/components/responses/ShoppingCartAddProductToCartSuccess"
+
+  "/shoppingcart/{cart_id}":
+    get:
+      tags:
+        - Shoppingcart
+      summary: Get List of Products in Shopping Cart
+      parameters:
+        - name: cart_id
+          in: path
+          description: Cart ID
+          required: true
+          schema:
+            type: string
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/ShoppingCartGetProductsInCartSuccess"
+        "404":
+          $ref: "#/components/responses/ShoppingCartGetByCartIdNotFoundError"
+
+  "/shoppingcart/update/{item_id}":
+    put:
+      tags:
+        - Shoppingcart
+      summary: Update the cart by item
+      parameters:
+        - name: item_id
+          in: path
+          description: Item ID
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  description: Item Quantity
+                  type: integer
+              required:
+                - quantity
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/ShoppingCartGetProductsInCartSuccess"
+        "400":
+          $ref: "#/components/responses/ShoppingCartGetByItemIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/ShoppingCartGetByItemIdNotFoundError"
+
+  "/shoppingcart/empty/{cart_id}":
+    delete:
+      tags:
+        - Shoppingcart
+      summary: Empty cart
+      parameters:
+        - name: cart_id
+          in: path
+          description: Cart ID
+          required: true
+          schema:
+            type: string
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/ShoppingCartEmptyProductsInCartSuccess"
+        "404":
+          $ref: "#/components/responses/ShoppingCartGetByCartIdNotFoundError"
+
+  "/shoppingcart/moveToCart/{item_id}":
+    get:
+      tags:
+        - Shoppingcart
+      summary: Move a product to cart
+      parameters:
+        - name: item_id
+          in: path
+          description: Item ID
+          required: true
+          schema:
+            type: integer
+      security: []
+      responses:
+        "200":
+          description: No data
+        "400":
+          $ref: "#/components/responses/ShoppingCartGetByItemIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/ShoppingCartGetByItemIdNotFoundError"
+
+  "/shoppingcart/totalAmount/{cart_id}":
+    get:
+      tags:
+        - Shoppingcart
+      summary: Return a total Amount from Cart
+      parameters:
+        - name: cart_id
+          in: path
+          description: Cart ID
+          required: true
+          schema:
+            type: string
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/ShoppingCartGetTotalAmountFromCart"
+        "404":
+          $ref: "#/components/responses/ShoppingCartGetByCartIdNotFoundError"
+
+  "/shoppingcart/saveForLater/{item_id}":
+    get:
+      tags:
+        - Shoppingcart
+      summary: Save a Product for latter
+      parameters:
+        - name: item_id
+          in: path
+          description: Item ID
+          required: true
+          schema:
+            type: integer
+      security: []
+      responses:
+        "200":
+          description: No data
+        "400":
+          $ref: "#/components/responses/ShoppingCartGetByItemIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/ShoppingCartGetByItemIdNotFoundError"
+
+  "/shoppingcart/getSaved/{cart_id}":
+    get:
+      tags:
+        - Shoppingcart
+      summary: Get Products saved for later
+      parameters:
+        - name: cart_id
+          in: path
+          description: Cart ID
+          required: true
+          schema:
+            type: string
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/ShoppingCartGetProductsSavedSuccess"
+        "404":
+          $ref: "#/components/responses/ShoppingCartGetByCartIdNotFoundError"
+
+  "/shoppingcart/removeProduct/{item_id}":
+    delete:
+      tags:
+        - Shoppingcart
+      summary: Remove a product in the cart
+      parameters:
+        - name: item_id
+          in: path
+          description: Item ID
+          required: true
+          schema:
+            type: integer
+      security: []
+      responses:
+        "200":
+          description: No data
+        "400":
+          $ref: "#/components/responses/ShoppingCartGetByItemIdNotNumberError"
+        "404":
+          $ref: "#/components/responses/ShoppingCartGetByItemIdNotFoundError"
+
+  /stripe/charge:
+    post:
+      tags:
+        - Stripe
+      summary: This method receive a front-end payment and create a chage
+      description: You can send a cart informations and payment token
+        (https://stripe.com/docs/api/tokens)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                order_id:
+                  description: The order ID recorded before (Check the Order Documentation)
+                  type: integer
+                description:
+                  description: Description to order
+                  type: string
+                amount:
+                  description: "Only numbers like: 999"
+                  type: integer
+                currency:
+                  description: "Check here the options: https://stripe.com/docs/currencies,
+                    the default"
+                  type: string
+                  default: USD
+              required:
+                - stripeToken
+                - order_id
+                - description
+                - amount
+      security: []
+      responses:
+        "200":
+          description: "Stripe response object"
+        "401":
+          $ref: "#/components/responses/CustomerUnAuthorizedError"
+
+  /stripe/webhooks:
+    post:
+      tags:
+        - Stripe
+      summary: Endpoint that provide a synchronization
+      description: You need put this endpoint in the stripe webhooks
+        (https://dashboard.stripe.com/account/webhooks), so get there the
+        end-point secrete key
+      responses:
+        "200":
+          description: This endpoint is used by Stripe
+
+components:
+  schemas:
+    Attribute:
+      properties:
+        attribute_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Size
+
+    AttributeValues:
+      properties:
+        attribute_value_id:
+          type: integer
+          example: 1
+        value:
+          type: string
+          example: S
+
+    AttributeValuesForProduct:
+      properties:
+        attribute_name:
+          type: string
+          example: Color
+        attribute_value_id:
+          type: integer
+          example: 6
+        attribute_value:
+          type: string
+          example: White
+    Department:
+      properties:
+        department_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Regional
+        description:
+          type: string
+          example: Proud of your country? Wear a T-shirt with a national symbol stamp!
+    Category:
+      properties:
+        category_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: French
+        description:
+          type: string
+          example: The French have always had an eye for beauty. One look at the
+            T-shirts below and you'll see that same appreciation has been
+            applied abundantly to their postage stamps. Below are some of our
+            most beautiful and colorful T-shirts, so browse away! And don't
+            forget to go all the way to the bottom - you don't want to miss
+            any of them!
+    CategoryBasic:
+      properties:
+        category_id:
+          type: integer
+          example: 1
+        department_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: French
+    Categories:
+      properties:
+        count:
+          type: integer
+          example: 10
+        rows:
+          type: array
+          items:
+            $ref: "#/components/schemas/Category"
+        total:
+          type: integer
+          example: 50
+        limit:
+          type: integer
+          example: 10
+        page:
+          type: integer
+          example: 1
+    Order:
+      properties:
+        order_id:
+          type: integer
+          example: 1
+        product_id:
+          type: integer
+          example: 1
+        attributes:
+          type: string
+          example: Big
+        product_name:
+          type: string
+          example: Chartres Cathedral
+        quantity:
+          type: integer
+          example: 1
+        unit_cost:
+          type: string
+          example: "14.99"
+        subtotal:
+          type: string
+          example: "14.99"
+    OrderBasic:
+      properties:
+        order_id:
+          type: integer
+          example: 1
+        total_amount:
+          type: integer
+          example: 1
+        created_on:
+          type: string
+          example: 2019-04-04 12:07:21
+        shipped_on:
+          type: string
+          example: 2019-04-07 12:07:21
+        status:
+          type: string
+          example: paid
+        name:
+          type: string
+          example: Test
+        customer_id:
+          type: number
+          example: 1
+    Product:
+      properties:
+        product_id:
+          type: integer
+          example: 2
+        name:
+          type: string
+          example: Chartres Cathedral
+        description:
+          type: string
+          example: '"The Fur Merchants". Not all the beautiful stained glass in the
+            great cathedrals depicts saints and angels! Lay aside your furs
+            for the summer and wear this beautiful T-shirt!'
+        price:
+          type: string
+          example: "16.95"
+        discounted_price:
+          type: string
+          example: "15.95"
+        thumbnail:
+          type: string
+          example: chartres-cathedral-thumbnail.gif
+    Products:
+      properties:
+        count:
+          type: integer
+          example: 1
+        rows:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"
+        total:
+          type: integer
+          example: 50
+        limit:
+          type: integer
+          example: 10
+        page:
+          type: integer
+          example: 1
+    ProductInDepartment:
+      properties:
+        product_id:
+          type: integer
+          example: 2
+        name:
+          type: string
+          example: Chartres Cathedral
+        description:
+          type: string
+          example: '"The Fur Merchants". Not all the beautiful stained glass in the
+            great cathedrals depicts saints and angels! Lay aside your furs
+            for the summer and wear this beautiful T-shirt!'
+        price:
+          type: string
+          example: "16.95"
+        discounted_price:
+          type: string
+          example: "15.95"
+        thumbnail:
+          type: string
+          example: chartres-cathedral-thumbnail.gif
+    ProductsInDepartment:
+      properties:
+        count:
+          type: integer
+          example: 1
+        rows:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductInDepartment"
+        total:
+          type: integer
+          example: 50
+        limit:
+          type: integer
+          example: 10
+        page:
+          type: integer
+          example: 1
+    ProductComplete:
+      properties:
+        product_id:
+          type: integer
+          example: 2
+        name":
+          type: string
+          example: Chartres Cathedral
+        description:
+          type: string
+          example: '"The Fur Merchants". Not all the beautiful stained glass in the
+            great cathedrals depicts saints and angels! Lay aside your furs
+            for the summer and wear this beautiful T-shirt!'
+        price:
+          type: string
+          example: "16.95"
+        discounted_price:
+          type: string
+          example: "15.95"
+        image:
+          type: string
+          example: chartres-cathedral.gif
+        image2:
+          type: string
+          example: chartres-cathedral2.gif
+        thumbnail:
+          type: string
+          example: chartres-cathedral-thumbnail.gif
+        display:
+          type: integer
+          example: 0
+    ProductDetail:
+      properties:
+        product_id:
+          type: integer
+          example: 2
+        name:
+          type: string
+          example: Chartres Cathedral
+        description:
+          type: string
+          example: '"The Fur Merchants". Not all the beautiful stained glass in the
+            great cathedrals depicts saints and angels! Lay aside your furs
+            for the summer and wear this beautiful T-shirt!'
+        price:
+          type: string
+          example: "16.95"
+        discounted_price:
+          type: string
+          example: "15.95"
+        image:
+          type: string
+          example: chartres-cathedral.gif
+        image2:
+          type: string
+          example: chartres-cathedral2.gif
+    ProductLocation:
+      properties:
+        category_id:
+          type: integer
+          example: 1
+        category_name:
+          type: string
+          example: French
+        department_id:
+          type: integer
+          example: 1
+        department_name:
+          type: string
+          example: Regional
+    ProductSaved:
+      properties:
+        item_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Tshit
+        attributes:
+          type: string
+          example: LG, red
+        price:
+          type: string
+          example: "15.90"
+    ShippingRegion:
+      properties:
+        shipping_id:
+          type: integer
+          example: 1
+        shipping_type:
+          type: string
+          example: Next Day Delivery ($20)
+        shipping_cost:
+          type: string
+          example: '20.00'
+        shipping_region_id:
+          type: integer
+          example: 2
+    Review:
+      properties:
+        name:
+          type: string
+          example: Eder Taveira
+        review:
+          type: string
+          example: That's a good product. The best for me
+        rating:
+          type: integer
+          example: 5
+        created_on:
+          type: string
+          example: 2019-02-17 13:57:29
+    ReviewCreated:
+      properties:
+        review_id:
+          type: integer
+          example: 1
+        customer_id:
+          type: integer
+          example: 1
+        review:
+          type: string
+          example: That's a good product. The best for me
+        rating:
+          type: integer
+          example: 5
+        created_on:
+          type: string
+          example: 2019-02-17 13:57:29
+    Customer:
+      properties:
+        customer_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Lannucci
+        email:
+          type: string
+          example: lannucci@hotmail.com
+        address_1:
+          type: string
+          example: QI 19
+        address_2:
+          type: string
+          example: ""
+        city:
+          type: string
+          example: ""
+        region:
+          type: string
+          example: ""
+        postal_code:
+          type: string
+          example: ""
+        country:
+          type: string
+          example: ""
+        shipping_region_id:
+          type: integer
+          example: 1
+        day_phone:
+          type: string
+          example: "+351323213511235"
+        eve_phone:
+          type: string
+          example: "+452436143246123"
+        mob_phone:
+          type: string
+          example: "+351323213511235"
+        credit_card:
+          type: string
+          example: XXXXXXXX5100
+    CustomerRegister:
+      properties:
+        customer:
+          properties:
+            schema:
+              $ref: "#/components/schemas/Customer"
+        accessToken:
+          type: string
+          example: Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE1NTA0MjQ0OTgsImV4cCI6MTU1MDUxMDg5OH0.aEFrNUPRWuRWx0IOEL-_A4J4Ti39iXEHAScm6GI61RR
+        expires_in:
+          type: string
+          example: 24h
+    Cart:
+      properties:
+        item_id:
+          type: integer
+          example: 2
+        name:
+          type: string
+          example: Arc d'Triomphe
+        attributes:
+          type: string
+          example: LG, red
+        product_id:
+          type: number
+          example: "1"
+        price:
+          type: string
+          example: "14.99"
+        quantity:
+          type: integer
+          example: 1
+        subtotal:
+          type: string
+          example: "14.99"
+    CartWithProduct:
+      properties:
+        item_id:
+          type: integer
+          example: 2
+        name:
+          type: string
+          example: Arc d'Triomphe
+        attributes:
+          type: string
+          example: LG, red
+        product_id:
+          type: integer
+          example: 2
+        price:
+          type: string
+          example: "14.99"
+        quantity:
+          type: integer
+          example: 1
+        image:
+          type: string
+          example: arc-d-triomphe.gif
+        subtotal:
+          type: string
+          example: "14.99"
+    Tax:
+      properties:
+        tax_id:
+          type: integer
+          example: 1
+        tax_type:
+          type: string
+          example: Sales Tax at 8.5%
+        tax_percentage:
+          type: string
+          example: "8.50"
+    Error:
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        field:
+          type: string
+        status:
+          type: number
+    UnAuthorized:
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        field:
+          type: string
+        status:
+          type: number
+      example:
+        code: AUT_02
+        message: Access Unauthorized
+        field: USER-KEY
+        status: 401
+
+  # Responses
+  responses:
+    # Responses/Attributes
+    AttributeGetAllSuccess:
+      description: List of Attributes
+      content:
+        "application/json":
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Attribute"
+    AttributeGetByIdSuccess:
+      description: Attribute details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Attribute"
+
+    AttributeGetByIdNotNumberError:
+      description: Error details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: ATT_01
+            message: The ID is not a number
+            field: attribute_id
+            status: 400
+    AttributeGetByIdNotFoundError:
+      description: Error details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: ATT_02
+            message: Don't exist attribute with this ID
+            field: attribute_id
+            status: 404
+    AttributeGetValuesByIdSuccess:
+      description: List of Attribute Values
+      content:
+        "application/json":
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/AttributeValues"
+
+    AttributeGetValuesByProductIdSuccess:
+      description: List of Attributes Values for Product
+      content:
+        "application/json":
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/AttributeValuesForProduct"
+
+    # Responses/Category
+    CategoryGetAllSuccess:
+      description: Return count (no of categories returned), rows of
+        Categories, total no of categories, page no and limit
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Categories"
+
+    CategoryGetByIdSuccess:
+      description: Category details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Category"
+    CategoryGetByIdNotNumberError:
+      description: Error details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: CAT_01
+            message: The ID is not a number
+            field: category_id
+            status: 400
+    CategoryGetByIdNotFoundError:
+      description: Error details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: CAT_02
+            message: Don't exist category with this ID
+            field: category_id
+            status: 404
+    CategoryGetByProductIdSuccess:
+      description: Categories for a Product
+      content:
+        "application/json":
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/CategoryBasic"
+    CategoryGetByDepartmentIdSuccess:
+      description: Categories for department
+      content:
+        "application/json":
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Category"
+
+    # Responses/Customers
+    CustomerUpdateSuccess:
+      description: Customer with auth credentials
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Customer"
+    CustomerGetSuccess:
+      description: Customer details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Customer"
+    CustomerAuthenticateSuccess:
+      description: Customer details and auth credentials
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/CustomerRegister"
+    CustomerEmailAlreadyExistError:
+      description: Error details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: USR_05
+            message: The email doesn't exist
+            field: email
+            status: 404
+    CustomerUnAuthorizedError:
+      description: Unauthorized
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/UnAuthorized"
+    CustomerInvalidCredentialsError:
+      description: Email or Password is invalid
+      content:
+        "application/json":
+          schema:
+            properties:
+              code:
+                type: string
+              message:
+                type: string
+              status:
+                type: number
+          example:
+            code: USR_01
+            message: Email or Password is invalid
+            status: 401
+
+    # Responses/Departments
+    DepartmentGetAllSuccess:
+      description: List of Departments
+      content:
+        "application/json":
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Department"
+    DepartmentGetByIdSuccess:
+      description: Department details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Department"
+    DepartmentGetByIdNotNumberError:
+      description: Error details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: DEP_01
+            message: The ID is not a number
+            field: department_id
+            status: 400
+    DepartmentGetByIdNotFoundError:
+      description: Error details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: DEP_02
+            message: Don't exist department with this ID
+            field: department_id
+            status: 404
+
+    # Responses/Orders
+    OrderCreateSuccess:
+      description: Order details
+      content:
+        "application/json":
+          schema:
+            properties:
+              orderId:
+                type: integer
+                example: 1
+    OrderInfoSuccess:
+      description: Order details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Order"
+    OrderShortDetailSuccess:
+      description: Order short details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/OrderBasic"
+    OrderGetByIdNotNumberError:
+      description: Error details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: ORD_01
+            message: The ID is not a number
+            field: order_id
+            status: 400
+    OrderGetByIdNotFoundError:
+      description: Error details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: ORD_02
+            message: Don't exist order with this ID
+            field: order_id
+            status: 404
+
+    OrderGetAllForCustomerSuccess:
+      description: List of Orders for a customer
+      content:
+        "application/json":
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Order"
+
+    # Responses/Products
+    ProductGetAllSuccess:
+      description: Return count (no of products returned), rows of
+        Products, total no of categories, page no and limit
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Products"
+
+    ProductGetAllByDepartmentSuccess:
+      description: Return count (no of products returned), rows of
+        Products, total no of categories, page no and limit
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/ProductsInDepartment"
+
+    ProductSearchSuccess:
+      description: Return a list with count (no of page returned), rows of
+        Products, total no of categories, page no and limit
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Products"
+
+    ProductGetByIdSuccess:
+      description: Product details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/ProductDetail"
+
+    ProductGetLocationsByIdSuccess:
+      description: list of Product Locations
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/ProductLocation"
+
+    ProductGetReviewsByIdSuccess:
+      description: list of Product Reviews
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Review"
+
+    ProductCreateReviewSuccess:
+      description: Review details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/ReviewCreated"
+
+    ProductGetByIdNotNumberError:
+      description: Error details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: PRD_01
+            message: The ID is not a number
+            field: product_id
+            status: 400
+    ProductGetByIdNotFoundError:
+      description: Error details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: PRD_02
+            message: Don't exist product with this ID
+            field: product_id
+            status: 404
+
+    # Responses/ShippingRegions
+    ShippingRegionGetAllSuccess:
+      description: List of Shipping Regions
+      content:
+        "application/json":
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/ShippingRegion"
+    ShippingRegionGetByIdSuccess:
+      description: List of Shipping Regions by ID
+      content:
+        "application/json":
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/ShippingRegion"
+
+    ShippingRegionGetByIdNotNumberError:
+      description: Error details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: SHR_01
+            message: The ID is not a number
+            field: shipping_region_id
+            status: 400
+
+    ShippingRegionGetByIdNotFoundError:
+      description: Error details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: SHR_02
+            message: Don't exist shipping_region with this ID
+            field: shipping_region_id
+            status: 404
+
+    # Responses/ShoppingCarts
+    ShoppingCartGetCartIdSuccess:
+      description: Json Object with unique Cart ID
+      content:
+        "application/json":
+          schema:
+            type: object
+            properties:
+              cart_id:
+                type: string
+                example: 5ae6f06ce1aa49779403bdd2a66bd1
+
+    ShoppingCartAddProductToCartSuccess:
+      description: Return list of products in the cart
+      content:
+        "application/json":
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/CartWithProduct"
+
+    ShoppingCartGetProductsInCartSuccess:
+      description: Return list of products in the cart
+      content:
+        "application/json":
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/CartWithProduct"
+
+    ShoppingCartGetProductsSavedSuccess:
+      description: List of saved products
+      content:
+        "application/json":
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/ProductSaved"
+
+    ShoppingCartEmptyProductsInCartSuccess:
+      description: Return empty list
+      content:
+        "application/json":
+          schema:
+            type: array
+          example: []
+
+    ShoppingCartGetByItemIdNotNumberError:
+      description: Error details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: SHC_01
+            message: The item_id is not a number
+            field: item_id
+            status: 400
+
+    ShoppingCartGetTotalAmountFromCart:
+      description: Return the total amount
+      content:
+        "application/json":
+          schema:
+            properties:
+              total_amount:
+                type: integer
+                example: 5
+
+    ShoppingCartGetByItemIdNotFoundError:
+      description: Error details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: SHC_02
+            message: Don't exist shopping_cart with this ITEM_ID.
+            field: item_id
+            status: 404
+
+    ShoppingCartGetByCartIdNotFoundError:
+      description: Error details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: SHC_02
+            message: Don't exist shopping_cart with this CART_ID.
+            field: cart_id
+            status: 404
+
+    # Responses/Taxes
+    TaxGetAllSuccess:
+      description: List of taxes
+      content:
+        "application/json":
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Tax"
+
+    TaxGetByIdSuccess:
+      description: Tax details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Tax"
+
+    TaxGetByIdNotNumberError:
+      description: Error details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: TAX_01
+            message: The tax_id is not a number
+            field: tax_id
+            status: 400
+
+    TaxGetByIdNotFoundError:
+      description: Error details
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: TAX_02
+            message: Don't exist tax with this ID
+            field: tax_id
+            status: 404
+
+
+  securitySchemes:
+    UserSecurity:
+      type: apiKey
+      in: header
+      name: USER-KEY

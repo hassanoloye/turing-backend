@@ -1,0 +1,1884 @@
+{
+  "catalog_add_attribute": {
+    "fields": {
+      "name": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "name",
+        "dbName": "inName",
+        "maxLength": 100
+      }
+    },
+    "parameters": [
+      "name"
+    ]
+  },
+  "catalog_add_attribute_value": {
+    "fields": {
+      "attribute_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "attribute_id",
+        "dbName": "inAttributeId",
+        "maxLength": null
+      },
+      "value": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "value",
+        "dbName": "inValue",
+        "maxLength": 100
+      }
+    },
+    "parameters": [
+      "attribute_id",
+      "value"
+    ]
+  },
+  "catalog_add_category": {
+    "fields": {
+      "department_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "department_id",
+        "dbName": "inDepartmentId",
+        "maxLength": null
+      },
+      "name": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "name",
+        "dbName": "inName",
+        "maxLength": 100
+      },
+      "description": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "description",
+        "dbName": "inDescription",
+        "maxLength": 1000
+      }
+    },
+    "parameters": [
+      "department_id",
+      "name",
+      "description"
+    ]
+  },
+  "catalog_add_department": {
+    "fields": {
+      "name": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "name",
+        "dbName": "inName",
+        "maxLength": 100
+      },
+      "description": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "description",
+        "dbName": "inDescription",
+        "maxLength": 1000
+      }
+    },
+    "parameters": [
+      "name",
+      "description"
+    ]
+  },
+  "catalog_add_product_to_category": {
+    "fields": {
+      "category_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "category_id",
+        "dbName": "inCategoryId",
+        "maxLength": null
+      },
+      "name": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "name",
+        "dbName": "inName",
+        "maxLength": 100
+      },
+      "description": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "description",
+        "dbName": "inDescription",
+        "maxLength": 1000
+      },
+      "price": {
+        "dbType": "decimal",
+        "type": "string",
+        "name": "price",
+        "dbName": "inPrice",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "category_id",
+      "name",
+      "description",
+      "price"
+    ]
+  },
+  "catalog_assign_attribute_value_to_product": {
+    "fields": {
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      },
+      "attribute_value_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "attribute_value_id",
+        "dbName": "inAttributeValueId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "product_id",
+      "attribute_value_id"
+    ]
+  },
+  "catalog_assign_product_to_category": {
+    "fields": {
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      },
+      "category_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "category_id",
+        "dbName": "inCategoryId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "product_id",
+      "category_id"
+    ]
+  },
+  "catalog_count_categories": {
+    "fields": {},
+    "parameters": []
+  },
+  "catalog_count_products_in_category": {
+    "fields": {
+      "category_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "category_id",
+        "dbName": "inCategoryId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "category_id"
+    ]
+  },
+  "catalog_count_products_on_catalog": {
+    "fields": {},
+    "parameters": []
+  },
+  "catalog_count_products_on_department": {
+    "fields": {
+      "department_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "department_id",
+        "dbName": "inDepartmentId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "department_id"
+    ]
+  },
+  "catalog_count_search_result": {
+    "fields": {
+      "search_string": {
+        "dbType": "text",
+        "type": "string",
+        "name": "search_string",
+        "dbName": "inSearchString",
+        "maxLength": 65535
+      },
+      "all_words": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "all_words",
+        "dbName": "inAllWords",
+        "maxLength": 3
+      }
+    },
+    "parameters": [
+      "search_string",
+      "all_words"
+    ]
+  },
+  "catalog_create_product_review": {
+    "fields": {
+      "customer_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "customer_id",
+        "dbName": "inCustomerId",
+        "maxLength": null
+      },
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      },
+      "review": {
+        "dbType": "text",
+        "type": "string",
+        "name": "review",
+        "dbName": "inReview",
+        "maxLength": 65535
+      },
+      "rating": {
+        "dbType": "smallint",
+        "type": "string",
+        "name": "rating",
+        "dbName": "inRating",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "customer_id",
+      "product_id",
+      "review",
+      "rating"
+    ]
+  },
+  "catalog_delete_attribute": {
+    "fields": {
+      "attribute_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "attribute_id",
+        "dbName": "inAttributeId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "attribute_id"
+    ]
+  },
+  "catalog_delete_attribute_value": {
+    "fields": {
+      "attribute_value_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "attribute_value_id",
+        "dbName": "inAttributeValueId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "attribute_value_id"
+    ]
+  },
+  "catalog_delete_category": {
+    "fields": {
+      "category_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "category_id",
+        "dbName": "inCategoryId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "category_id"
+    ]
+  },
+  "catalog_delete_department": {
+    "fields": {
+      "department_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "department_id",
+        "dbName": "inDepartmentId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "department_id"
+    ]
+  },
+  "catalog_delete_product": {
+    "fields": {
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "product_id"
+    ]
+  },
+  "catalog_get_attributes": {
+    "fields": {},
+    "parameters": []
+  },
+  "catalog_get_attributes_not_assigned_to_product": {
+    "fields": {
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "product_id"
+    ]
+  },
+  "catalog_get_attribute_details": {
+    "fields": {
+      "attribute_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "attribute_id",
+        "dbName": "inAttributeId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "attribute_id"
+    ]
+  },
+  "catalog_get_attribute_values": {
+    "fields": {
+      "attribute_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "attribute_id",
+        "dbName": "inAttributeId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "attribute_id"
+    ]
+  },
+  "catalog_get_categories": {
+    "fields": {
+      "order_by": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "order_by",
+        "dbName": "inOrderBy",
+        "maxLength": 11
+      },
+      "start_item": {
+        "dbType": "int",
+        "type": "number",
+        "name": "start_item",
+        "dbName": "inStartItem",
+        "maxLength": null
+      },
+      "categories_per_page": {
+        "dbType": "int",
+        "type": "number",
+        "name": "categories_per_page",
+        "dbName": "inCategoriesPerPage",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "order_by",
+      "start_item",
+      "categories_per_page"
+    ]
+  },
+  "catalog_get_categories_for_product": {
+    "fields": {
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "product_id"
+    ]
+  },
+  "catalog_get_categories_list": {
+    "fields": {
+      "department_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "department_id",
+        "dbName": "inDepartmentId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "department_id"
+    ]
+  },
+  "catalog_get_category_details": {
+    "fields": {
+      "category_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "category_id",
+        "dbName": "inCategoryId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "category_id"
+    ]
+  },
+  "catalog_get_category_name": {
+    "fields": {
+      "category_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "category_id",
+        "dbName": "inCategoryId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "category_id"
+    ]
+  },
+  "catalog_get_category_products": {
+    "fields": {
+      "category_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "category_id",
+        "dbName": "inCategoryId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "category_id"
+    ]
+  },
+  "catalog_get_departments": {
+    "fields": {},
+    "parameters": []
+  },
+  "catalog_get_departments_list": {
+    "fields": {},
+    "parameters": []
+  },
+  "catalog_get_department_categories": {
+    "fields": {
+      "department_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "department_id",
+        "dbName": "inDepartmentId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "department_id"
+    ]
+  },
+  "catalog_get_department_details": {
+    "fields": {
+      "department_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "department_id",
+        "dbName": "inDepartmentId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "department_id"
+    ]
+  },
+  "catalog_get_department_name": {
+    "fields": {
+      "department_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "department_id",
+        "dbName": "inDepartmentId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "department_id"
+    ]
+  },
+  "catalog_get_products_in_category": {
+    "fields": {
+      "category_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "category_id",
+        "dbName": "inCategoryId",
+        "maxLength": null
+      },
+      "short_product_description_length": {
+        "dbType": "int",
+        "type": "number",
+        "name": "short_product_description_length",
+        "dbName": "inShortProductDescriptionLength",
+        "maxLength": null
+      },
+      "products_per_page": {
+        "dbType": "int",
+        "type": "number",
+        "name": "products_per_page",
+        "dbName": "inProductsPerPage",
+        "maxLength": null
+      },
+      "start_item": {
+        "dbType": "int",
+        "type": "number",
+        "name": "start_item",
+        "dbName": "inStartItem",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "category_id",
+      "short_product_description_length",
+      "products_per_page",
+      "start_item"
+    ]
+  },
+  "catalog_get_products_on_catalog": {
+    "fields": {
+      "short_product_description_length": {
+        "dbType": "int",
+        "type": "number",
+        "name": "short_product_description_length",
+        "dbName": "inShortProductDescriptionLength",
+        "maxLength": null
+      },
+      "products_per_page": {
+        "dbType": "int",
+        "type": "number",
+        "name": "products_per_page",
+        "dbName": "inProductsPerPage",
+        "maxLength": null
+      },
+      "start_item": {
+        "dbType": "int",
+        "type": "number",
+        "name": "start_item",
+        "dbName": "inStartItem",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "short_product_description_length",
+      "products_per_page",
+      "start_item"
+    ]
+  },
+  "catalog_get_products_on_department": {
+    "fields": {
+      "department_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "department_id",
+        "dbName": "inDepartmentId",
+        "maxLength": null
+      },
+      "short_product_description_length": {
+        "dbType": "int",
+        "type": "number",
+        "name": "short_product_description_length",
+        "dbName": "inShortProductDescriptionLength",
+        "maxLength": null
+      },
+      "products_per_page": {
+        "dbType": "int",
+        "type": "number",
+        "name": "products_per_page",
+        "dbName": "inProductsPerPage",
+        "maxLength": null
+      },
+      "start_item": {
+        "dbType": "int",
+        "type": "number",
+        "name": "start_item",
+        "dbName": "inStartItem",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "department_id",
+      "short_product_description_length",
+      "products_per_page",
+      "start_item"
+    ]
+  },
+  "catalog_get_product_attributes": {
+    "fields": {
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "product_id"
+    ]
+  },
+  "catalog_get_product_details": {
+    "fields": {
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "product_id"
+    ]
+  },
+  "catalog_get_product_info": {
+    "fields": {
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "product_id"
+    ]
+  },
+  "catalog_get_product_locations": {
+    "fields": {
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "product_id"
+    ]
+  },
+  "catalog_get_product_name": {
+    "fields": {
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "product_id"
+    ]
+  },
+  "catalog_get_product_reviews": {
+    "fields": {
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "product_id"
+    ]
+  },
+  "catalog_get_recommendations": {
+    "fields": {
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      },
+      "short_product_description_length": {
+        "dbType": "int",
+        "type": "number",
+        "name": "short_product_description_length",
+        "dbName": "inShortProductDescriptionLength",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "product_id",
+      "short_product_description_length"
+    ]
+  },
+  "catalog_get_tax_details": {
+    "fields": {
+      "tax_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "tax_id",
+        "dbName": "inTaxId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "tax_id"
+    ]
+  },
+  "catalog_get_tax_list": {
+    "fields": {},
+    "parameters": []
+  },
+  "catalog_move_product_to_category": {
+    "fields": {
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      },
+      "source_category_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "source_category_id",
+        "dbName": "inSourceCategoryId",
+        "maxLength": null
+      },
+      "target_category_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "target_category_id",
+        "dbName": "inTargetCategoryId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "product_id",
+      "source_category_id",
+      "target_category_id"
+    ]
+  },
+  "catalog_remove_product_attribute_value": {
+    "fields": {
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      },
+      "attribute_value_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "attribute_value_id",
+        "dbName": "inAttributeValueId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "product_id",
+      "attribute_value_id"
+    ]
+  },
+  "catalog_remove_product_from_category": {
+    "fields": {
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      },
+      "category_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "category_id",
+        "dbName": "inCategoryId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "product_id",
+      "category_id"
+    ]
+  },
+  "catalog_search": {
+    "fields": {
+      "search_string": {
+        "dbType": "text",
+        "type": "string",
+        "name": "search_string",
+        "dbName": "inSearchString",
+        "maxLength": 65535
+      },
+      "all_words": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "all_words",
+        "dbName": "inAllWords",
+        "maxLength": 3
+      },
+      "short_product_description_length": {
+        "dbType": "int",
+        "type": "number",
+        "name": "short_product_description_length",
+        "dbName": "inShortProductDescriptionLength",
+        "maxLength": null
+      },
+      "products_per_page": {
+        "dbType": "int",
+        "type": "number",
+        "name": "products_per_page",
+        "dbName": "inProductsPerPage",
+        "maxLength": null
+      },
+      "start_item": {
+        "dbType": "int",
+        "type": "number",
+        "name": "start_item",
+        "dbName": "inStartItem",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "search_string",
+      "all_words",
+      "short_product_description_length",
+      "products_per_page",
+      "start_item"
+    ]
+  },
+  "catalog_set_image": {
+    "fields": {
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      },
+      "image": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "image",
+        "dbName": "inImage",
+        "maxLength": 150
+      }
+    },
+    "parameters": [
+      "product_id",
+      "image"
+    ]
+  },
+  "catalog_set_image_2": {
+    "fields": {
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      },
+      "image": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "image",
+        "dbName": "inImage",
+        "maxLength": 150
+      }
+    },
+    "parameters": [
+      "product_id",
+      "image"
+    ]
+  },
+  "catalog_set_product_display_option": {
+    "fields": {
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      },
+      "display": {
+        "dbType": "smallint",
+        "type": "string",
+        "name": "display",
+        "dbName": "inDisplay",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "product_id",
+      "display"
+    ]
+  },
+  "catalog_set_thumbnail": {
+    "fields": {
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      },
+      "thumbnail": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "thumbnail",
+        "dbName": "inThumbnail",
+        "maxLength": 150
+      }
+    },
+    "parameters": [
+      "product_id",
+      "thumbnail"
+    ]
+  },
+  "catalog_update_attribute": {
+    "fields": {
+      "attribute_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "attribute_id",
+        "dbName": "inAttributeId",
+        "maxLength": null
+      },
+      "name": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "name",
+        "dbName": "inName",
+        "maxLength": 100
+      }
+    },
+    "parameters": [
+      "attribute_id",
+      "name"
+    ]
+  },
+  "catalog_update_attribute_value": {
+    "fields": {
+      "attribute_value_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "attribute_value_id",
+        "dbName": "inAttributeValueId",
+        "maxLength": null
+      },
+      "value": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "value",
+        "dbName": "inValue",
+        "maxLength": 100
+      }
+    },
+    "parameters": [
+      "attribute_value_id",
+      "value"
+    ]
+  },
+  "catalog_update_category": {
+    "fields": {
+      "category_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "category_id",
+        "dbName": "inCategoryId",
+        "maxLength": null
+      },
+      "name": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "name",
+        "dbName": "inName",
+        "maxLength": 100
+      },
+      "description": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "description",
+        "dbName": "inDescription",
+        "maxLength": 1000
+      }
+    },
+    "parameters": [
+      "category_id",
+      "name",
+      "description"
+    ]
+  },
+  "catalog_update_department": {
+    "fields": {
+      "department_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "department_id",
+        "dbName": "inDepartmentId",
+        "maxLength": null
+      },
+      "name": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "name",
+        "dbName": "inName",
+        "maxLength": 100
+      },
+      "description": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "description",
+        "dbName": "inDescription",
+        "maxLength": 1000
+      }
+    },
+    "parameters": [
+      "department_id",
+      "name",
+      "description"
+    ]
+  },
+  "catalog_update_product": {
+    "fields": {
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      },
+      "name": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "name",
+        "dbName": "inName",
+        "maxLength": 100
+      },
+      "description": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "description",
+        "dbName": "inDescription",
+        "maxLength": 1000
+      },
+      "price": {
+        "dbType": "decimal",
+        "type": "string",
+        "name": "price",
+        "dbName": "inPrice",
+        "maxLength": null
+      },
+      "discounted_price": {
+        "dbType": "decimal",
+        "type": "string",
+        "name": "discounted_price",
+        "dbName": "inDiscountedPrice",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "product_id",
+      "name",
+      "description",
+      "price",
+      "discounted_price"
+    ]
+  },
+  "customer_add": {
+    "fields": {
+      "name": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "name",
+        "dbName": "inName",
+        "maxLength": 50
+      },
+      "email": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "email",
+        "dbName": "inEmail",
+        "maxLength": 100
+      },
+      "password": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "password",
+        "dbName": "inPassword",
+        "maxLength": 60
+      }
+    },
+    "parameters": [
+      "name",
+      "email",
+      "password"
+    ]
+  },
+  "customer_count_customer_with_email": {
+    "fields": {
+      "email": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "email",
+        "dbName": "inEmail",
+        "maxLength": 100
+      }
+    },
+    "parameters": [
+      "email"
+    ]
+  },
+  "customer_get_customer": {
+    "fields": {
+      "customer_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "customer_id",
+        "dbName": "inCustomerId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "customer_id"
+    ]
+  },
+  "customer_get_customers_list": {
+    "fields": {},
+    "parameters": []
+  },
+  "customer_get_customer_with_email": {
+    "fields": {
+      "email": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "email",
+        "dbName": "inEmail",
+        "maxLength": 100
+      }
+    },
+    "parameters": [
+      "email"
+    ]
+  },
+  "customer_get_login_info": {
+    "fields": {
+      "email": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "email",
+        "dbName": "inEmail",
+        "maxLength": 100
+      }
+    },
+    "parameters": [
+      "email"
+    ]
+  },
+  "customer_get_shipping_regions": {
+    "fields": {},
+    "parameters": []
+  },
+  "customer_update_account": {
+    "fields": {
+      "customer_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "customer_id",
+        "dbName": "inCustomerId",
+        "maxLength": null
+      },
+      "name": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "name",
+        "dbName": "inName",
+        "maxLength": 50
+      },
+      "email": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "email",
+        "dbName": "inEmail",
+        "maxLength": 100
+      },
+      "password": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "password",
+        "dbName": "inPassword",
+        "maxLength": 60
+      },
+      "day_phone": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "day_phone",
+        "dbName": "inDayPhone",
+        "maxLength": 100
+      },
+      "eve_phone": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "eve_phone",
+        "dbName": "inEvePhone",
+        "maxLength": 100
+      },
+      "mob_phone": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "mob_phone",
+        "dbName": "inMobPhone",
+        "maxLength": 100
+      }
+    },
+    "parameters": [
+      "customer_id",
+      "name",
+      "email",
+      "password",
+      "day_phone",
+      "eve_phone",
+      "mob_phone"
+    ]
+  },
+  "customer_update_address": {
+    "fields": {
+      "customer_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "customer_id",
+        "dbName": "inCustomerId",
+        "maxLength": null
+      },
+      "address_1": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "address_1",
+        "dbName": "inAddress1",
+        "maxLength": 100
+      },
+      "address_2": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "address_2",
+        "dbName": "inAddress2",
+        "maxLength": 100
+      },
+      "city": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "city",
+        "dbName": "inCity",
+        "maxLength": 100
+      },
+      "region": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "region",
+        "dbName": "inRegion",
+        "maxLength": 100
+      },
+      "postal_code": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "postal_code",
+        "dbName": "inPostalCode",
+        "maxLength": 100
+      },
+      "country": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "country",
+        "dbName": "inCountry",
+        "maxLength": 100
+      },
+      "shipping_region_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "shipping_region_id",
+        "dbName": "inShippingRegionId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "customer_id",
+      "address_1",
+      "address_2",
+      "city",
+      "region",
+      "postal_code",
+      "country",
+      "shipping_region_id"
+    ]
+  },
+  "customer_update_credit_card": {
+    "fields": {
+      "customer_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "customer_id",
+        "dbName": "inCustomerId",
+        "maxLength": null
+      },
+      "credit_card": {
+        "dbType": "text",
+        "type": "string",
+        "name": "credit_card",
+        "dbName": "inCreditCard",
+        "maxLength": 65535
+      }
+    },
+    "parameters": [
+      "customer_id",
+      "credit_card"
+    ]
+  },
+  "orders_create_audit": {
+    "fields": {
+      "order_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "order_id",
+        "dbName": "inOrderId",
+        "maxLength": null
+      },
+      "message": {
+        "dbType": "text",
+        "type": "string",
+        "name": "message",
+        "dbName": "inMessage",
+        "maxLength": 65535
+      },
+      "code": {
+        "dbType": "int",
+        "type": "number",
+        "name": "code",
+        "dbName": "inCode",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "order_id",
+      "message",
+      "code"
+    ]
+  },
+  "orders_get_audit_trail": {
+    "fields": {
+      "order_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "order_id",
+        "dbName": "inOrderId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "order_id"
+    ]
+  },
+  "orders_get_by_customer_id": {
+    "fields": {
+      "customer_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "customer_id",
+        "dbName": "inCustomerId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "customer_id"
+    ]
+  },
+  "orders_get_most_recent_orders": {
+    "fields": {
+      "how_many": {
+        "dbType": "int",
+        "type": "number",
+        "name": "how_many",
+        "dbName": "inHowMany",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "how_many"
+    ]
+  },
+  "orders_get_orders_between_dates": {
+    "fields": {
+      "start_date": {
+        "dbType": "datetime",
+        "type": "string",
+        "name": "start_date",
+        "dbName": "inStartDate",
+        "maxLength": null
+      },
+      "end_date": {
+        "dbType": "datetime",
+        "type": "string",
+        "name": "end_date",
+        "dbName": "inEndDate",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "start_date",
+      "end_date"
+    ]
+  },
+  "orders_get_orders_by_status": {
+    "fields": {
+      "status": {
+        "dbType": "int",
+        "type": "number",
+        "name": "status",
+        "dbName": "inStatus",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "status"
+    ]
+  },
+  "orders_get_order_details": {
+    "fields": {
+      "order_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "order_id",
+        "dbName": "inOrderId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "order_id"
+    ]
+  },
+  "orders_get_order_info": {
+    "fields": {
+      "order_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "order_id",
+        "dbName": "inOrderId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "order_id"
+    ]
+  },
+  "orders_get_order_short_details": {
+    "fields": {
+      "order_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "order_id",
+        "dbName": "inOrderId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "order_id"
+    ]
+  },
+  "orders_get_shipping_info": {
+    "fields": {
+      "shipping_region_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "shipping_region_id",
+        "dbName": "inShippingRegionId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "shipping_region_id"
+    ]
+  },
+  "orders_set_auth_code": {
+    "fields": {
+      "order_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "order_id",
+        "dbName": "inOrderId",
+        "maxLength": null
+      },
+      "auth_code": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "auth_code",
+        "dbName": "inAuthCode",
+        "maxLength": 50
+      },
+      "reference": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "reference",
+        "dbName": "inReference",
+        "maxLength": 50
+      }
+    },
+    "parameters": [
+      "order_id",
+      "auth_code",
+      "reference"
+    ]
+  },
+  "orders_set_date_shipped": {
+    "fields": {
+      "order_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "order_id",
+        "dbName": "inOrderId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "order_id"
+    ]
+  },
+  "orders_update_order": {
+    "fields": {
+      "order_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "order_id",
+        "dbName": "inOrderId",
+        "maxLength": null
+      },
+      "status": {
+        "dbType": "int",
+        "type": "number",
+        "name": "status",
+        "dbName": "inStatus",
+        "maxLength": null
+      },
+      "comments": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "comments",
+        "dbName": "inComments",
+        "maxLength": 255
+      },
+      "auth_code": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "auth_code",
+        "dbName": "inAuthCode",
+        "maxLength": 50
+      },
+      "reference": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "reference",
+        "dbName": "inReference",
+        "maxLength": 50
+      }
+    },
+    "parameters": [
+      "order_id",
+      "status",
+      "comments",
+      "auth_code",
+      "reference"
+    ]
+  },
+  "orders_update_status": {
+    "fields": {
+      "order_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "order_id",
+        "dbName": "inOrderId",
+        "maxLength": null
+      },
+      "status": {
+        "dbType": "int",
+        "type": "number",
+        "name": "status",
+        "dbName": "inStatus",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "order_id",
+      "status"
+    ]
+  },
+  "shopping_cart_add_product": {
+    "fields": {
+      "cart_id": {
+        "dbType": "char",
+        "type": "string",
+        "name": "cart_id",
+        "dbName": "inCartId",
+        "maxLength": 32
+      },
+      "product_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "product_id",
+        "dbName": "inProductId",
+        "maxLength": null
+      },
+      "attributes": {
+        "dbType": "varchar",
+        "type": "string",
+        "name": "attributes",
+        "dbName": "inAttributes",
+        "maxLength": 1000
+      }
+    },
+    "parameters": [
+      "cart_id",
+      "product_id",
+      "attributes"
+    ]
+  },
+  "shopping_cart_count_old_carts": {
+    "fields": {
+      "days": {
+        "dbType": "int",
+        "type": "number",
+        "name": "days",
+        "dbName": "inDays",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "days"
+    ]
+  },
+  "shopping_cart_create_order": {
+    "fields": {
+      "cart_id": {
+        "dbType": "char",
+        "type": "string",
+        "name": "cart_id",
+        "dbName": "inCartId",
+        "maxLength": 32
+      },
+      "customer_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "customer_id",
+        "dbName": "inCustomerId",
+        "maxLength": null
+      },
+      "shipping_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "shipping_id",
+        "dbName": "inShippingId",
+        "maxLength": null
+      },
+      "tax_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "tax_id",
+        "dbName": "inTaxId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "cart_id",
+      "customer_id",
+      "shipping_id",
+      "tax_id"
+    ]
+  },
+  "shopping_cart_delete_old_carts": {
+    "fields": {
+      "days": {
+        "dbType": "int",
+        "type": "number",
+        "name": "days",
+        "dbName": "inDays",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "days"
+    ]
+  },
+  "shopping_cart_empty": {
+    "fields": {
+      "cart_id": {
+        "dbType": "char",
+        "type": "string",
+        "name": "cart_id",
+        "dbName": "inCartId",
+        "maxLength": 32
+      }
+    },
+    "parameters": [
+      "cart_id"
+    ]
+  },
+  "shopping_cart_get_products": {
+    "fields": {
+      "cart_id": {
+        "dbType": "char",
+        "type": "string",
+        "name": "cart_id",
+        "dbName": "inCartId",
+        "maxLength": 32
+      }
+    },
+    "parameters": [
+      "cart_id"
+    ]
+  },
+  "shopping_cart_get_recommendations": {
+    "fields": {
+      "cart_id": {
+        "dbType": "char",
+        "type": "string",
+        "name": "cart_id",
+        "dbName": "inCartId",
+        "maxLength": 32
+      },
+      "short_product_description_length": {
+        "dbType": "int",
+        "type": "number",
+        "name": "short_product_description_length",
+        "dbName": "inShortProductDescriptionLength",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "cart_id",
+      "short_product_description_length"
+    ]
+  },
+  "shopping_cart_get_saved_products": {
+    "fields": {
+      "cart_id": {
+        "dbType": "char",
+        "type": "string",
+        "name": "cart_id",
+        "dbName": "inCartId",
+        "maxLength": 32
+      }
+    },
+    "parameters": [
+      "cart_id"
+    ]
+  },
+  "shopping_cart_get_total_amount": {
+    "fields": {
+      "cart_id": {
+        "dbType": "char",
+        "type": "string",
+        "name": "cart_id",
+        "dbName": "inCartId",
+        "maxLength": 32
+      }
+    },
+    "parameters": [
+      "cart_id"
+    ]
+  },
+  "shopping_cart_move_product_to_cart": {
+    "fields": {
+      "item_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "item_id",
+        "dbName": "inItemId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "item_id"
+    ]
+  },
+  "shopping_cart_remove_product": {
+    "fields": {
+      "item_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "item_id",
+        "dbName": "inItemId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "item_id"
+    ]
+  },
+  "shopping_cart_save_product_for_later": {
+    "fields": {
+      "item_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "item_id",
+        "dbName": "inItemId",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "item_id"
+    ]
+  },
+  "shopping_cart_update": {
+    "fields": {
+      "item_id": {
+        "dbType": "int",
+        "type": "number",
+        "name": "item_id",
+        "dbName": "inItemId",
+        "maxLength": null
+      },
+      "quantity": {
+        "dbType": "int",
+        "type": "number",
+        "name": "quantity",
+        "dbName": "inQuantity",
+        "maxLength": null
+      }
+    },
+    "parameters": [
+      "item_id",
+      "quantity"
+    ]
+  }
+}

@@ -152,9 +152,9 @@ export default class ProductsController extends BaseController {
             validate(req.query, this._getProductsParamsSchema, {unknownProperties: 'error'});
             const {kwargs, queryKwargs} = this.getQueryKwargsFromRequest(req, defaultRequestParams,
                 {replaceFields: this._defaultPaginationReplaceFields});
-            const rows = await this.performCustomQuery('catalog_get_products_on_catalog', queryKwargs);
+            const rows = await this.performCustomQuery('catalog_get_products', queryKwargs);
             const total = await this.performCustomQueryCount(
-                'catalog_count_products_on_catalog', req.params);
+                'catalog_count_products', req.params);
             return res.json(this.getPaginatedResult(rows, total, kwargs, this._defaultPaginationReplaceFields))
         } catch (e) {
             next(e)

@@ -474,6 +474,37 @@ BEGIN
   EXECUTE statement USING @p1, @p2, @p3, @p4, @p5;
 END$$
 
+-- Create catalog_count_products stored procedure
+CREATE PROCEDURE catalog_count_products()
+BEGIN
+  SELECT COUNT(*) AS products_count
+  FROM   product;
+END$$
+
+-- Create catalog_get_products stored procedure
+CREATE PROCEDURE catalog_get_products(
+  IN inShortProductDescriptionLength INT,
+  IN inProductsPerPage INT, IN inStartItem INT)
+BEGIN
+  PREPARE statement FROM
+    "SELECT   product_id, name,
+              IF(LENGTH(description) <= ?,
+                 description,
+                 CONCAT(LEFT(description, ?),
+                        '...')) AS description,
+              price, discounted_price, thumbnail
+     FROM     product
+     ORDER BY display DESC
+     LIMIT    ?, ?";
+
+  SET @p1 = inShortProductDescriptionLength;
+  SET @p2 = inShortProductDescriptionLength;
+  SET @p3 = inStartItem;
+  SET @p4 = inProductsPerPage;
+
+  EXECUTE statement USING @p1, @p2, @p3, @p4;
+END$$
+
 -- Create catalog_count_products_on_catalog stored procedure
 CREATE PROCEDURE catalog_count_products_on_catalog()
 BEGIN
